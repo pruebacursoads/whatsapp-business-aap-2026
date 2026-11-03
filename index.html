@@ -1,0 +1,2303 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sesión 1: WhatsApp Business para Marketing, Comunicación y Gestión Comercial | AAP — CECAAP x Hugo López</title>
+  <meta name="description" content="Base de conocimientos oficial — Sesión 1: Herramientas, API, calidad del número y estrategias para convertir conversaciones en oportunidades. Asociación Automotriz del Perú (CECAAP) con Hugo López." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0a;
+      color: #f8fafc;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+    .slide-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 7rem;
+      padding-bottom: 7rem;
+    }
+    .prompt-box {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 16px;
+      padding: 2rem;
+      font-family: 'Fira Code', monospace;
+    }
+  </style>
+</head>
+<body class="bg-[#0a0a0a] text-slate-100 selection:bg-[#00aeef] selection:text-white">
+  <div id="root"></div>
+
+  <script type="module">
+    import React, { useState } from 'https://esm.sh/react@18.3.1';
+    import { createRoot } from 'https://esm.sh/react-dom@18.3.1/client';
+    import htm from 'https://esm.sh/htm@3.1.1';
+    import {
+      Calendar, MapPin, Clock, Bot, Smartphone,
+      Video, CheckCircle, ArrowRight, Check,
+      MessageCircle, Award, Film, Wand2, Zap, Users, Layers,
+      Copy, Sparkles, Search, BarChart3, HelpCircle,
+      UserCheck, Wrench, Truck, Radio, Gift, Building2, Car, CheckSquare, ArrowUpRight,
+      ShieldCheck, AlertTriangle, DollarSign, Settings, Briefcase, Link2, BookOpen, Target, FileText
+    } from 'https://esm.sh/lucide-react@0.454.0?deps=react@18.3.1';
+
+    const html = htm.bind(React.createElement);
+
+    const HUGO_PHOTO = "https://img.wpfc.ml/90d/sd/cmrc7p.png";
+    const AAP_LOGO = "https://i.postimg.cc/4Ns11VjJ/Mejora-logo-fondo-202604161744.jpg";
+
+    const CopyButton = ({ text, colorClass = "bg-emerald-900/60 hover:bg-emerald-600 text-emerald-200" }) => {
+      const [copied, setCopied] = useState(false);
+      const handleCopy = () => {
+        if (navigator?.clipboard) {
+          navigator.clipboard.writeText(text);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        }
+      };
+      return html`
+        <button
+          onClick=${handleCopy}
+          className=${`absolute top-4 right-4 ${colorClass} px-4 py-2 rounded-lg flex items-center gap-2 font-bold text-sm transition-colors z-10 shadow-lg`}
+        >
+          ${copied ? html`<${Check} className="w-4 h-4"/>` : html`<${Copy} className="w-4 h-4"/>`}
+          ${copied ? "¡Copiado!" : "Copiar"}
+        </button>
+      `;
+    };
+
+    const Header = () => html`
+      <header className="bg-[#0f172a]/95 backdrop-blur-md text-white fixed w-full top-0 z-50 shadow-2xl border-b-[4px] border-[#f59e0b] transition-all">
+        <div className="container mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center max-w-[1800px]">
+          <div className="flex items-center space-x-4">
+            <div className="bg-white p-2 rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+              <img src=${AAP_LOGO} alt="Logo AAP" className="h-9 sm:h-11 w-auto object-contain" />
+            </div>
+            <div className="flex flex-col border-l-[3px] border-[#f59e0b] pl-4">
+              <span className="text-xl sm:text-2xl font-black tracking-tighter leading-none flex items-center">
+                WHATSAPP <span className="text-[#25D366] ml-1.5">BUSINESS</span>
+              </span>
+              <span className="text-[11px] font-bold tracking-widest text-[#f59e0b] uppercase mt-1">Sesión 1 · 2 Noviembre 2026</span>
+            </div>
+          </div>
+          <nav className="hidden xl:flex space-x-4 text-xs font-black items-center uppercase tracking-wider text-slate-300">
+            <a href="#proposito" className="hover:text-white transition-colors flex items-center gap-1"><${Layers} className="w-3.5 h-3.5 text-[#f59e0b]"/> 1. Propósito</a>
+            <a href="#idea-central" className="hover:text-white transition-colors flex items-center gap-1"><${Target} className="w-3.5 h-3.5 text-[#00aeef]"/> 2. Flujo</a>
+            <a href="#diagnostico" className="hover:text-white transition-colors flex items-center gap-1"><${HelpCircle} className="w-3.5 h-3.5 text-[#f59e0b]"/> 3. Diagnóstico</a>
+            <a href="#tres-opciones" className="hover:text-[#25D366] transition-colors flex items-center gap-1"><${Smartphone} className="w-3.5 h-3.5 text-[#25D366]"/> B1. 3 Opciones</a>
+            <a href="#meta-api" className="hover:text-[#00aeef] transition-colors flex items-center gap-1"><${Settings} className="w-3.5 h-3.5 text-[#00aeef]"/> B2. Meta & API</a>
+            <a href="#mensajes-ventanas" className="hover:text-amber-400 transition-colors flex items-center gap-1"><${MessageCircle} className="w-3.5 h-3.5 text-amber-400"/> B3. Mensajes y Costos</a>
+            <a href="#calidad" className="hover:text-rose-400 transition-colors flex items-center gap-1"><${ShieldCheck} className="w-3.5 h-3.5 text-rose-400"/> B4. Calidad</a>
+            <a href="#herramientas-app" className="hover:text-[#25D366] transition-colors flex items-center gap-1"><${Briefcase} className="w-3.5 h-3.5 text-[#25D366]"/> B5. Herramientas</a>
+            <a href="#estrategia" className="hover:text-emerald-400 transition-colors flex items-center gap-1"><${BarChart3} className="w-3.5 h-3.5 text-emerald-400"/> B6. Estrategia</a>
+            <a href="#ia-flow" className="hover:text-purple-400 transition-colors flex items-center gap-1"><${Sparkles} className="w-3.5 h-3.5 text-purple-400"/> B7. IA Flow</a>
+            <a href="#casos-cargo" className="hover:text-[#00aeef] transition-colors flex items-center gap-1"><${Users} className="w-3.5 h-3.5 text-[#00aeef]"/> B8. Casos</a>
+            <a href="#cierre" className="hover:text-[#f59e0b] transition-colors flex items-center gap-1"><${Award} className="w-3.5 h-3.5 text-[#f59e0b]"/> Cierre</a>
+          </nav>
+        </div>
+      </header>
+    `;
+
+    const Hero = () => html`
+      <section className="relative bg-[#0f172a] text-white slide-container overflow-hidden pt-28">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1e3a8a]/60 to-[#0f172a]"></div>
+
+        <div className="container mx-auto px-6 relative z-10 flex flex-col justify-center items-center text-center max-w-[1550px]">
+          <div className="inline-flex flex-wrap justify-center gap-3 sm:gap-4 mb-10 animate-fade-in-up" style=${{ animationDelay: '0.1s' }}>
+            <span className="bg-white text-[#1e3a8a] text-sm sm:text-lg font-black px-6 sm:px-8 py-3 rounded-full uppercase tracking-widest shadow-2xl flex items-center gap-2.5">
+              <${MessageCircle} className="w-5 h-5 text-[#25D366]"/> Sesión 1 · Herramientas, API y Estrategia
+            </span>
+            <span className="bg-[#f59e0b] text-[#0f172a] text-sm sm:text-lg font-black px-6 sm:px-8 py-3 rounded-full uppercase tracking-widest shadow-2xl flex items-center gap-2.5">
+              <${Calendar} className="w-5 h-5"/> 2 de Noviembre de 2026
+            </span>
+            <span className="bg-slate-800/90 text-white border border-slate-600 text-sm sm:text-lg font-black px-6 sm:px-8 py-3 rounded-full uppercase tracking-widest shadow-2xl flex items-center gap-2.5">
+              <${Clock} className="w-5 h-5 text-[#00aeef]"/> Duración: 3 Horas (180 min)
+            </span>
+          </div>
+
+          <p className="text-lg sm:text-2xl font-black uppercase tracking-[0.25em] text-[#00aeef] mb-4 animate-fade-in-up" style=${{ animationDelay: '0.15s' }}>
+            Asociación Automotriz del Perú — CECAAP
+          </p>
+
+          <h1 className="text-4xl sm:text-6xl md:text-[5.5rem] font-black mb-8 leading-[1.05] tracking-tight animate-fade-in-up" style=${{ animationDelay: '0.2s' }}>
+            WHATSAPP BUSINESS PARA <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#25D366] via-[#00aeef] to-[#38bdf8]">
+              MARKETING, COMUNICACIÓN Y GESTIÓN COMERCIAL
+            </span>
+          </h1>
+
+          <p className="text-xl sm:text-2xl md:text-3xl text-slate-300 font-medium mb-12 max-w-5xl animate-fade-in-up leading-relaxed" style=${{ animationDelay: '0.3s' }}>
+            Herramientas de la aplicación, <strong className="text-white">WhatsApp Business Platform / API</strong>, cuidado de la calidad del número y estrategias para <strong className="text-[#25D366]">convertir conversaciones en oportunidades reales.</strong>
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl w-full mb-14 animate-fade-in-up" style=${{ animationDelay: '0.35s' }}>
+            <div className="bg-slate-900/90 border border-slate-700 p-6 rounded-3xl flex items-center gap-5 text-left shadow-xl">
+              <${Users} className="w-12 h-12 text-[#f59e0b] shrink-0"/>
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-[#f59e0b]">Dirigido a Equipos Multidisciplinarios</p>
+                <p className="text-xl font-black text-white">Marketing, Comunicación, Contenido y Ventas</p>
+                <p className="text-base text-slate-400">Gerencia, Gestión de Equipos, Desarrollo Humano y Tecnología / Sistemas</p>
+              </div>
+            </div>
+            <div className="bg-slate-900/90 border border-slate-700 p-6 rounded-3xl flex items-center gap-5 text-left shadow-xl">
+              <${Smartphone} className="w-12 h-12 text-[#25D366] shrink-0"/>
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-[#25D366]">Enfoque Práctico y Estratégico</p>
+                <p className="text-xl font-black text-white">App + Plataforma/API + Calidad + IA</p>
+                <p className="text-base text-slate-400">Cómo conectar marketing, atención y ventas con un proceso compartido</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-slate-900/80 border-2 border-[#00aeef]/50 p-6 md:p-8 rounded-[4rem] shadow-2xl backdrop-blur-md inline-flex flex-col sm:flex-row items-center gap-6 sm:gap-8 animate-fade-in-up hover:border-[#00aeef] transition-colors" style=${{ animationDelay: '0.4s' }}>
+            <div className="w-28 h-28 shrink-0 rounded-full border-[4px] border-[#00aeef] overflow-hidden shadow-[0_0_30px_rgba(0,174,239,0.4)]">
+              <img src=${HUGO_PHOTO} alt="Hugo López" className="w-full h-full object-cover object-top" />
+            </div>
+            <div className="text-center sm:text-left sm:pr-8">
+              <p className="text-lg text-[#00aeef] font-black uppercase tracking-widest mb-1">Facilitador de la Sesión</p>
+              <p className="text-3xl md:text-4xl text-white font-black uppercase tracking-wider">Hugo López</p>
+              <p className="text-base text-slate-400 mt-1">Base de Conocimientos Oficial · Sesión 1 (2 de noviembre de 2026)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+
+    const PropositoYResultado = () => html`
+      <section id="proposito" className="bg-[#0a0a0a] border-t-2 border-slate-800 slide-container">
+        <div className="container mx-auto px-6 max-w-[1600px]">
+          <div className="text-center mb-16">
+            <h2 className="text-2xl font-black text-[#f59e0b] uppercase tracking-[0.2em] mb-4">Sección 1 · Propósito de la Sesión</h2>
+            <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Conectar Marketing, Atención y Ventas</h3>
+            <p className="text-2xl text-slate-300 max-w-5xl mx-auto leading-relaxed">
+              WhatsApp se ha convertido en uno de los espacios donde los clientes preguntan, comparan, solicitan información, coordinan reuniones y toman decisiones de compra.
+            </p>
+          </div>
+
+          <div className="bg-slate-900 border border-rose-500/40 rounded-[3rem] p-8 md:p-14 shadow-2xl mb-16">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 border-b border-slate-800 pb-6">
+              <div>
+                <span className="text-sm font-black uppercase tracking-widest text-rose-400 block mb-1">El Problema Actual</span>
+                <h4 className="text-3xl font-black text-white">Muchas empresas siguen utilizando este canal sin una estrategia clara:</h4>
+              </div>
+              <span className="bg-rose-500/10 border border-rose-500/30 text-rose-300 px-5 py-2 rounded-full text-sm font-black uppercase tracking-wider shrink-0">8 Síntomas Frecuentes</span>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+              ${[
+                "Marketing atrae personas, pero no sabe qué pasó después.",
+                "El equipo comercial responde de diferentes maneras.",
+                "Las consultas llegan sin contexto.",
+                "Algunos prospectos dejan de recibir seguimiento.",
+                "Se envían promociones a personas que no las solicitaron.",
+                "Las áreas no saben qué mensajes generan resultados.",
+                "No existe claridad sobre qué es WhatsApp Business, qué es la API y cuándo conviene usar cada opción.",
+                "Se crean piezas de contenido sin una función concreta dentro de la conversación."
+              ].map((prob, i) => html`
+                <div key=${i} className="bg-[#16161a] border border-slate-800 p-6 rounded-2xl flex items-start gap-3.5">
+                  <${AlertTriangle} className="w-6 h-6 text-rose-400 shrink-0 mt-0.5"/>
+                  <p className="text-base text-slate-200 font-medium leading-relaxed">${prob}</p>
+                </div>
+              `)}
+            </div>
+            <div className="mt-8 bg-[#0f172a] border-l-4 border-[#00aeef] p-6 rounded-2xl">
+              <p className="text-lg md:text-xl text-white font-semibold">
+                <strong className="text-[#00aeef]">Objetivo de esta sesión:</strong> Que cada participante comprenda cómo conectar marketing, atención y ventas mediante WhatsApp, conociendo tanto las herramientas de la aplicación como las opciones que ofrece la plataforma/API.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-[#16161a] border border-slate-700 rounded-[3rem] md:rounded-[4rem] p-8 md:p-14 shadow-2xl">
+            <div className="text-center mb-12">
+              <span className="bg-[#25D366] text-[#0f172a] text-base font-black px-6 py-2 rounded-full uppercase tracking-widest inline-block mb-4">Resultado Esperado</span>
+              <h4 className="text-3xl md:text-5xl font-black text-white">Al finalizar la sesión, cada participante podrá lograr estos 10 resultados:</h4>
+            </div>
+            <div className="grid md:grid-cols-2 gap-5">
+              ${[
+                "1. Diferenciar WhatsApp Messenger, WhatsApp Business y WhatsApp Business Platform/API.",
+                "2. Identificar qué opción utiliza actualmente su empresa.",
+                "3. Explicar qué significa vincular un número a Meta y qué significa conectarlo a la plataforma/API.",
+                "4. Comprender las opciones de conexión mediante proveedores, coexistencia o integración directa.",
+                "5. Identificar categorías de mensajes, ventanas de atención, límites y componentes del costo.",
+                "6. Explicar cómo se cuida la calidad del número y de la comunicación.",
+                "7. Reconocer las principales herramientas de WhatsApp Business y su utilidad para marketing.",
+                "8. Diseñar una campaña sencilla con un público, un mensaje y una acción esperada.",
+                "9. Crear o planificar una imagen o video con inteligencia artificial para acompañar una conversación.",
+                "10. Definir cómo marketing y ventas pueden trabajar con un proceso compartido."
+              ].map((res, i) => html`
+                <div key=${i} className="bg-slate-900/90 border border-slate-700 p-6 rounded-3xl flex items-start gap-4 hover:border-[#25D366] transition-colors">
+                  <${CheckCircle} className="w-7 h-7 text-[#25D366] shrink-0 mt-0.5"/>
+                  <p className="text-lg md:text-xl text-white font-bold leading-snug">${res}</p>
+                </div>
+              `)}
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+
+    const IdeaCentralYFlujo = () => {
+      const flujoPasos = [
+        "1. Contenido o anuncio",
+        "2. Interés",
+        "3. Clic",
+        "4. Conversación",
+        "5. Identificación de la necesidad",
+        "6. Propuesta",
+        "7. Seguimiento",
+        "8. Cita, venta o servicio",
+        "9. Postventa"
+      ];
+
+      const ejemploAutomotriz = [
+        { etapa: "Contenido", desc: "El video explica qué revisar al elegir un vehículo de trabajo (distribución urbana)." },
+        { etapa: "Interés", desc: "La persona quiere saber qué alternativas existen." },
+        { etapa: "Acción", desc: "Hace clic en el enlace de WhatsApp." },
+        { etapa: "Conversación", desc: "Explica que necesita renovar una unidad para su empresa." },
+        { etapa: "Calificación", desc: "Se identifica el tipo de operación, ubicación y necesidad." },
+        { etapa: "Propuesta", desc: "El equipo comercial presenta una alternativa disponible." },
+        { etapa: "Seguimiento", desc: "Se coordina una reunión o visita." },
+        { etapa: "Resultado", desc: "La empresa puede medir cuántas conversaciones terminaron en oportunidades reales." }
+      ];
+
+      return html`
+        <section id="idea-central" className="bg-[#111827] border-t border-slate-800 slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-[#00aeef] uppercase tracking-[0.2em] mb-4">Sección 2 · La Idea Central</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">De una Publicación a una Oportunidad</h3>
+              <p className="text-2xl text-slate-300 max-w-4xl mx-auto">
+                Una estrategia digital no termina cuando una persona ve una publicación. El proceso completo conecta cada etapa:
+              </p>
+            </div>
+
+            <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-12 shadow-2xl mb-14">
+              <h4 className="text-xl font-black uppercase tracking-widest text-[#f59e0b] mb-6 text-center">El Recorrido Completo de 9 Etapas</h4>
+              <div className="flex flex-wrap justify-center items-center gap-3">
+                ${flujoPasos.map((paso, idx) => html`
+                  <div key=${idx} className="flex items-center gap-3">
+                    <div className="bg-[#16161a] border-2 border-[#00aeef]/40 px-5 py-3.5 rounded-2xl text-white font-black text-base sm:text-lg shadow-lg">
+                      ${paso}
+                    </div>
+                    ${idx < flujoPasos.length - 1 ? html`<${ArrowRight} className="w-6 h-6 text-[#f59e0b] hidden sm:block"/>` : null}
+                  </div>
+                `)}
+              </div>
+            </div>
+
+            <div className="grid lg:grid-cols-12 gap-10 mb-14 items-stretch">
+              <div className="lg:col-span-7 bg-[#16161a] border border-slate-800 rounded-[3rem] p-8 md:p-12 shadow-xl">
+                <div className="flex items-center gap-3 mb-6">
+                  <${Truck} className="w-8 h-8 text-[#00aeef]"/>
+                  <div>
+                    <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block">Caso Aplicado</span>
+                    <h4 className="text-2xl md:text-3xl font-black text-white">Ejemplo: Empresa Automotriz (Distribución Urbana)</h4>
+                  </div>
+                </div>
+                <p className="text-slate-300 text-lg mb-6">Una persona ve un video sobre vehículos para distribución urbana:</p>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  ${ejemploAutomotriz.map((item, i) => html`
+                    <div key=${i} className="bg-slate-900/90 border border-slate-700/80 p-5 rounded-2xl">
+                      <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-1">${item.etapa}</span>
+                      <p className="text-base text-slate-200 font-medium">${item.desc}</p>
+                    </div>
+                  `)}
+                </div>
+              </div>
+
+              <div className="lg:col-span-5 bg-slate-900 border-2 border-[#25D366]/50 rounded-[3rem] p-8 md:p-12 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-2">¿Qué aprendemos?</span>
+                  <h4 className="text-2xl md:text-3xl font-black text-white mb-4">Marketing no debe medirse únicamente por cuántas personas escribieron</h4>
+                  <p className="text-lg text-slate-300 mb-6">También debe preguntarse:</p>
+                  <div className="space-y-3.5">
+                    ${[
+                      "¿Qué buscaban esas personas?",
+                      "¿Cuántas recibieron respuesta?",
+                      "¿Cuántas eran oportunidades para la empresa?",
+                      "¿Cuántas llegaron a una reunión?",
+                      "¿Qué preguntas se repitieron?",
+                      "¿Qué contenido atrajo a los contactos adecuados?"
+                    ].map((q, i) => html`
+                      <div key=${i} className="bg-[#16161a] border border-slate-800 px-5 py-3.5 rounded-2xl flex items-center gap-3">
+                        <${HelpCircle} className="w-5 h-5 text-[#25D366] shrink-0"/>
+                        <span className="text-white font-bold text-base">${q}</span>
+                      </div>
+                    `)}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-[#1e3a8a] to-[#0f172a] border-2 border-[#f59e0b] rounded-[3rem] p-8 md:p-12 text-center shadow-2xl">
+              <span className="bg-[#f59e0b] text-[#0f172a] text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full inline-block mb-4">Frase para Abrir la Clase</span>
+              <blockquote className="text-2xl md:text-4xl font-black text-white leading-snug max-w-5xl mx-auto">
+                “WhatsApp no es solamente el lugar donde respondemos mensajes. Es el punto donde el interés del cliente se convierte en una conversación que el negocio debe saber gestionar”.
+              </blockquote>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const DiagnosticoInicial = () => {
+      const perfiles = [
+        {
+          area: "Para Marketing y Contenido",
+          color: "border-[#00aeef]",
+          accent: "text-[#00aeef]",
+          icon: html`<${Sparkles} className="w-7 h-7 text-[#00aeef]"/>`,
+          preguntas: [
+            "¿Saben cuántas conversaciones generan sus publicaciones?",
+            "¿Qué información recibe el asesor antes de responder?",
+            "¿Conocen las preguntas y objeciones más frecuentes?"
+          ]
+        },
+        {
+          area: "Para Ventas",
+          color: "border-[#25D366]",
+          accent: "text-[#25D366]",
+          icon: html`<${MessageCircle} className="w-7 h-7 text-[#25D366]"/>`,
+          preguntas: [
+            "¿Las consultas llegan con suficiente información?",
+            "¿Cómo organizan los seguimientos?",
+            "¿Qué contenido les ayudaría a responder mejor?"
+          ]
+        },
+        {
+          area: "Para Gerencia",
+          color: "border-[#f59e0b]",
+          accent: "text-[#f59e0b]",
+          icon: html`<${Briefcase} className="w-7 h-7 text-[#f59e0b]"/>`,
+          preguntas: [
+            "¿Hay un proceso común o cada persona responde a su manera?",
+            "¿Quién tiene acceso al número?",
+            "¿Qué ocurre cuando un asesor no está disponible?"
+          ]
+        },
+        {
+          area: "Para Tecnología o Gestión de Sistemas",
+          color: "border-purple-500",
+          accent: "text-purple-400",
+          icon: html`<${Settings} className="w-7 h-7 text-purple-400"/>`,
+          preguntas: [
+            "¿Dónde se registra la información?",
+            "¿Qué datos necesitan otras áreas?",
+            "¿Existen herramientas que ya deben integrarse con el proceso comercial?"
+          ]
+        }
+      ];
+
+      return html`
+        <section id="diagnostico" className="bg-[#0a0a0a] border-t border-slate-800 slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-[#f59e0b] uppercase tracking-[0.2em] mb-4">Sección 3 · Diagnóstico Inicial del Grupo</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">¿Cómo Operamos Hoy en WhatsApp?</h3>
+              <p className="text-2xl text-slate-400 max-w-4xl mx-auto">
+                Antes de desarrollar las herramientas, cada participante responde estas 6 preguntas generales y las de su perfil:
+              </p>
+            </div>
+
+            <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-12 shadow-2xl mb-14">
+              <h4 className="text-2xl font-black text-white mb-8 text-center">6 Preguntas Generales para Todo el Grupo</h4>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                ${[
+                  "1. ¿Usas WhatsApp Messenger o WhatsApp Business para el trabajo?",
+                  "2. ¿El número que utilizas pertenece a la empresa o es personal?",
+                  "3. ¿Atiendes clientes directamente o preparas contenido para atraerlos?",
+                  "4. ¿Cómo llegan hoy las consultas?",
+                  "5. ¿Qué pasa después de que una persona escribe?",
+                  "6. ¿Qué parte del proceso te gustaría mejorar?"
+                ].map((q, i) => html`
+                  <div key=${i} className="bg-[#16161a] border border-slate-800 p-6 rounded-2xl flex items-start gap-4">
+                    <span className="bg-[#f59e0b] text-[#0f172a] font-black w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-sm">${i + 1}</span>
+                    <p className="text-lg text-white font-bold leading-snug">${q.substring(3)}</p>
+                  </div>
+                `)}
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              ${perfiles.map((p, idx) => html`
+                <div key=${idx} className=${`bg-[#16161a] border-2 ${p.color} rounded-[2.5rem] p-8 md:p-10 shadow-xl`}>
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="bg-slate-900 p-4 rounded-2xl border border-slate-800">${p.icon}</div>
+                    <h4 className=${`text-2xl md:text-3xl font-black ${p.accent}`}>${p.area}</h4>
+                  </div>
+                  <div className="space-y-4">
+                    ${p.preguntas.map((preg, j) => html`
+                      <div key=${j} className="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl flex items-start gap-3">
+                        <${CheckSquare} className=${`w-5 h-5 ${p.accent} shrink-0 mt-1`}/>
+                        <p className="text-lg text-slate-200 font-semibold">${preg}</p>
+                      </div>
+                    `)}
+                  </div>
+                </div>
+              `)}
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Bloque1TresOpciones = () => {
+      const tablaComparativa = [
+        {
+          aspecto: "Propósito principal",
+          messenger: "Conversaciones personales",
+          business: "Atención comercial desde la aplicación",
+          api: "Integrar la mensajería con sistemas y procesos empresariales"
+        },
+        {
+          aspecto: "Perfil comercial",
+          messenger: "No es su enfoque principal",
+          business: "Disponible",
+          api: "Se administra mediante las herramientas correspondientes de Meta y la integración"
+        },
+        {
+          aspecto: "Catálogo",
+          messenger: "No es su herramienta comercial principal",
+          business: "Disponible según las funciones de la app",
+          api: "Depende de las capacidades e integraciones utilizadas"
+        },
+        {
+          aspecto: "Respuestas rápidas y mensajes automáticos",
+          messenger: "Funciones generales",
+          business: "Herramientas propias de la app",
+          api: "Depende del software conectado y su configuración"
+        },
+        {
+          aspecto: "Integración con CRM",
+          messenger: "No es su finalidad principal",
+          business: "Puede vincularse a herramientas de Meta; las capacidades dependen de la solución",
+          api: "Diseñada para integraciones mediante la plataforma"
+        },
+        {
+          aspecto: "Trabajo coordinado",
+          messenger: "Posible con las opciones disponibles en la aplicación",
+          business: "Posible con las opciones de la app y dispositivos vinculados",
+          api: "Puede ampliarse mediante bandejas y herramientas para equipos"
+        },
+        {
+          aspecto: "Campañas por API",
+          messenger: "No",
+          business: "No por el solo hecho de instalar la aplicación",
+          api: "Posibles mediante plantillas y reglas de la plataforma"
+        },
+        {
+          aspecto: "Costos",
+          messenger: "Uso ordinario de la app",
+          business: "La aplicación cuenta con funciones gratuitas; algunas ofertas pueden tener costo",
+          api: "Pueden existir costos de Meta, del proveedor y de otras herramientas"
+        }
+      ];
+
+      return html`
+        <section id="tres-opciones" className="bg-[#111827] border-t-4 border-[#25D366] slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-[#25D366] uppercase tracking-[0.2em] mb-4">Bloque 1 · Secciones 4, 5, 6 y 7</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Las Tres Opciones de WhatsApp</h3>
+              <p className="text-2xl text-slate-300 max-w-5xl mx-auto">
+                Diferencias reales entre WhatsApp Messenger, WhatsApp Business y WhatsApp Business Platform / API.
+              </p>
+            </div>
+
+            <!-- Secciones 4, 5 y 6 en 3 grandes tarjetas -->
+            <div className="grid lg:grid-cols-3 gap-8 mb-16 items-stretch">
+              <!-- Sección 4: WhatsApp Messenger -->
+              <div className="bg-slate-900 border-2 border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="bg-slate-800 text-slate-300 text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full inline-block mb-4">Sección 4 · Uso Personal</span>
+                  <h4 className="text-3xl font-black text-white mb-3">WhatsApp Messenger</h4>
+                  <p className="text-base text-slate-300 mb-5 leading-relaxed">
+                    Aplicación de mensajería para conversar con familiares, amigos, compañeros y otros contactos.
+                  </p>
+                  <div className="bg-[#16161a] border border-slate-800 rounded-2xl p-5 mb-5">
+                    <span className="text-xs font-black uppercase tracking-widest text-slate-400 block mb-2">Funciones generales:</span>
+                    <ul className="text-sm text-slate-200 space-y-1.5 font-medium">
+                      <li>• Mensajes individuales y de voz</li>
+                      <li>• Llamadas y videollamadas</li>
+                      <li>• Envío de fotografías, videos y documentos</li>
+                      <li>• Estados, Grupos, Comunidades y Canales (según cuenta)</li>
+                    </ul>
+                  </div>
+                  <div className="bg-rose-950/30 border border-rose-500/30 rounded-2xl p-5 mb-5">
+                    <span className="text-xs font-black uppercase tracking-widest text-rose-400 block mb-1">Ejemplo real: Asesor con número personal</span>
+                    <p className="text-sm text-slate-200 leading-relaxed">
+                      Recibe en el mismo espacio consultas sobre modelos, cotizaciones, preguntas de familiares, mensajes de amigos y coordinaciones internas. Si deja la empresa, es difícil recuperar el contexto y dar continuidad.
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-[#0f172a] border-l-4 border-[#f59e0b] p-4 rounded-xl text-sm text-amber-200 font-semibold">
+                  <strong>Reflexión:</strong> “¿El negocio conoce el estado de sus conversaciones o todo depende de que una persona recuerde qué pasó con cada cliente?”
+                </div>
+              </div>
+
+              <!-- Sección 5: WhatsApp Business -->
+              <div className="bg-slate-900 border-2 border-[#25D366] rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="bg-[#25D366]/20 text-[#25D366] text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full inline-block mb-4">Sección 5 · Aplicación Comercial</span>
+                  <h4 className="text-3xl font-black text-white mb-3">WhatsApp Business</h4>
+                  <p className="text-base text-slate-300 mb-5 leading-relaxed">
+                    No es solamente cambiar el ícono: la diferencia está en cómo el negocio organiza su identidad, sus respuestas y su proceso de atención.
+                  </p>
+                  <div className="bg-[#16161a] border border-slate-800 rounded-2xl p-5 mb-5">
+                    <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-2">10 Herramientas Comerciales:</span>
+                    <div className="grid grid-cols-2 gap-1.5 text-sm text-slate-200 font-medium">
+                      <span>• Perfil comercial</span>
+                      <span>• Datos del negocio</span>
+                      <span>• Catálogo</span>
+                      <span>• Bienvenida</span>
+                      <span>• Ausencia</span>
+                      <span>• Respuestas rápidas</span>
+                      <span>• Etiquetas</span>
+                      <span>• Enlaces y QR</span>
+                      <span>• Estados</span>
+                      <span>• Difusión</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 mb-5">
+                    <div className="bg-[#16161a] border border-slate-800 p-4 rounded-xl">
+                      <span className="text-xs font-black uppercase text-[#00aeef] block mb-1">Asesor comercial</span>
+                      <p className="text-xs text-slate-300">Perfil de empresa, respuestas frecuentes, organiza por etapa y recuerda a quién recontactar.</p>
+                    </div>
+                    <div className="bg-[#16161a] border border-slate-800 p-4 rounded-xl">
+                      <span className="text-xs font-black uppercase text-[#f59e0b] block mb-1">Equipo Marketing</span>
+                      <p className="text-xs text-slate-300">Define perfil, textos, respuestas rápidas, categorías de etiquetas, estados y flujo de campaña.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-[#0f172a] border-l-4 border-[#25D366] p-4 rounded-xl text-sm text-emerald-200 font-semibold">
+                  <strong>Idea clave:</strong> WhatsApp Business es el punto de encuentro entre la comunicación que promete marketing y la atención que recibe el cliente.
+                </div>
+              </div>
+
+              <!-- Sección 6: WhatsApp Business Platform y API -->
+              <div className="bg-slate-900 border-2 border-[#00aeef] rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="bg-[#00aeef]/20 text-[#00aeef] text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full inline-block mb-4">Sección 6 · Integración Empresarial</span>
+                  <h4 className="text-3xl font-black text-white mb-3">Platform y API</h4>
+                  <p className="text-base text-slate-300 mb-4 leading-relaxed">
+                    Orientada a empresas que desean integrar la mensajería con aplicaciones, bandejas de atención, CRM y sistemas siguiendo las reglas de Meta. <strong>API</strong> = forma estructurada para que dos sistemas intercambien información.
+                  </p>
+                  <div className="bg-[#16161a] border border-slate-800 rounded-2xl p-4 mb-4">
+                    <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">¿Qué permite una implementación?</span>
+                    <ul className="text-xs sm:text-sm text-slate-200 space-y-1 font-medium">
+                      <li>• Centralizar conversaciones en bandeja y asignar responsables</li>
+                      <li>• Conectar CRM, datos internos y medir operación</li>
+                      <li>• Crear automatizaciones y enviar plantillas aprobadas</li>
+                      <li>• Habilitar agentes humanos o soluciones automatizadas</li>
+                    </ul>
+                  </div>
+                  <div className="bg-[#16161a] border border-slate-800 rounded-2xl p-4 mb-4">
+                    <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-1">Ejemplo: “Quiero info sobre vehículos para reparto”</span>
+                    <p className="text-xs text-slate-300">Registra origen de campaña, muestra en bandeja, asigna al área, guarda datos en CRM y registra el resultado.</p>
+                  </div>
+                </div>
+                <div className="bg-rose-950/40 border-l-4 border-rose-500 p-4 rounded-xl text-sm text-rose-200 font-semibold">
+                  <strong>La API no es un CRM:</strong> La API permite la conexión; el CRM gestiona las relaciones y oportunidades comerciales.
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 7: Tabla Comparativa -->
+            <div className="bg-[#16161a] border border-slate-700 rounded-[3rem] p-8 md:p-12 shadow-2xl mb-10 overflow-x-auto">
+              <div className="text-center mb-8">
+                <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 7 · Matriz Comparativa</span>
+                <h4 className="text-3xl font-black text-white">Comparación de las Tres Opciones</h4>
+              </div>
+              <table className="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                  <tr className="border-b-2 border-slate-700 text-sm uppercase tracking-wider">
+                    <th className="py-4 px-4 text-[#f59e0b] font-black w-1/5">Aspecto</th>
+                    <th className="py-4 px-4 text-slate-300 font-black w-1/4">WhatsApp Messenger</th>
+                    <th className="py-4 px-4 text-[#25D366] font-black w-1/4">WhatsApp Business</th>
+                    <th className="py-4 px-4 text-[#00aeef] font-black w-3/10">WhatsApp Business Platform / API</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800 text-base">
+                  ${tablaComparativa.map((row, idx) => html`
+                    <tr key=${idx} className="hover:bg-slate-900/60 transition-colors">
+                      <td className="py-4 px-4 font-black text-white">${row.aspecto}</td>
+                      <td className="py-4 px-4 text-slate-400">${row.messenger}</td>
+                      <td className="py-4 px-4 text-emerald-200 font-medium">${row.business}</td>
+                      <td className="py-4 px-4 text-sky-200 font-medium">${row.api}</td>
+                    </tr>
+                  `)}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="bg-amber-950/30 border-2 border-[#f59e0b] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
+              <${AlertTriangle} className="w-12 h-12 text-[#f59e0b] shrink-0"/>
+              <div>
+                <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-1">Una Advertencia Sencilla</span>
+                <p className="text-lg md:text-xl text-white font-semibold">
+                  Tener WhatsApp Business no significa automáticamente tener una integración de API activa. Del mismo modo, conectar un número a una herramienta de Meta para una función específica no debe confundirse con haber configurado todas las capacidades de la plataforma/API.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Bloque2MetaYConexion = () => {
+      const tablaRutas = [
+        { necesidad: "Ordenar activos y vincular el número a herramientas comerciales de Meta", ruta: "Revisar la vinculación desde Meta Business Suite" },
+        { necesidad: "Mantener la app y conectar funciones de plataforma", ruta: "Evaluar coexistencia" },
+        { necesidad: "Gestionar atención y automatizaciones desde una herramienta lista", ruta: "Evaluar YCloud u otro proveedor o CRM" },
+        { necesidad: "Desarrollar una integración propia", ruta: "Evaluar Cloud API directa" }
+      ];
+
+      return html`
+        <section id="meta-api" className="bg-[#0a0a0a] border-t-4 border-[#00aeef] slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-[#00aeef] uppercase tracking-[0.2em] mb-4">Bloque 2 · Secciones 8, 9, 10 y 11</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Meta, API y Opciones de Conexión</h3>
+              <p className="text-2xl text-slate-400 max-w-5xl mx-auto">
+                Portafolio comercial, Meta Business Suite, las 3 rutas de conexión a la API y la verdad sobre la protección del número.
+              </p>
+            </div>
+
+            <!-- Secciones 8 y 9 -->
+            <div className="grid lg:grid-cols-2 gap-8 mb-14">
+              <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl">
+                <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-2">Sección 8 · Activos y Accesos</span>
+                <h4 className="text-3xl font-black text-white mb-4">¿Qué es el Portafolio Comercial de Meta?</h4>
+                <p className="text-lg text-slate-300 mb-6">
+                  Es el espacio donde un negocio administra activos y accesos de Meta: <strong>Páginas, Cuentas publicitarias, Personas y permisos, Activos vinculados a WhatsApp y otros recursos comerciales.</strong>
+                </p>
+                <div className="bg-[#16161a] border border-slate-800 rounded-2xl p-6 mb-4">
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-3">Cuando una empresa tiene Facebook, Instagram, Ads, WhatsApp, Marketing y Ventas, es vital saber:</span>
+                  <ul className="space-y-2 text-base text-slate-200 font-semibold">
+                    <li>1. A qué empresa pertenece cada activo.</li>
+                    <li>2. Quién tiene acceso y quién puede realizar cambios.</li>
+                    <li>3. Quién administra el número y qué configuración tiene ese número.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 9 · Gestión y Vinculación</span>
+                  <h4 className="text-3xl font-black text-white mb-4">¿Qué es Meta Business Suite?</h4>
+                  <p className="text-base text-slate-300 mb-4">
+                    Herramienta de Meta para gestionar contenido, revisar interacciones, administrar determinados mensajes y vincular herramientas de comunicación.
+                  </p>
+                  <div className="bg-[#16161a] border border-slate-800 rounded-2xl p-5 mb-4">
+                    <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-2">7 puntos que debe comprobar la empresa al vincular WhatsApp:</span>
+                    <div className="grid sm:grid-cols-2 gap-2 text-sm text-slate-200 font-medium">
+                      <span>• Qué número está vinculado</span>
+                      <span>• A qué portafolio pertenece</span>
+                      <span>• Quién tiene acceso</span>
+                      <span>• Qué funciones están habilitadas</span>
+                      <span>• Si está en WhatsApp Business Platform</span>
+                      <span>• Si existe un proveedor conectado</span>
+                      <span className="sm:col-span-2">• Si las automatizaciones o integraciones requeridas están disponibles</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-[#0f172a] border-l-4 border-[#00aeef] p-4 rounded-xl text-sm text-sky-200 font-semibold">
+                  <strong>Para enseñar:</strong> “Vincular el número es un paso importante de organización. Para saber si también tenemos API, debemos revisar el registro y las capacidades reales de esa cuenta”.
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 10: Las 3 Rutas -->
+            <div className="mb-14">
+              <div className="text-center mb-10">
+                <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-2">Sección 10 · Arquitectura de Conexión</span>
+                <h4 className="text-3xl md:text-5xl font-black text-white">3 Rutas para Trabajar con la Plataforma / API</h4>
+              </div>
+              <div className="grid lg:grid-cols-3 gap-8 mb-10">
+                <!-- Ruta 1 -->
+                <div className="bg-[#16161a] border-2 border-[#00aeef] rounded-[2.5rem] p-8 shadow-xl flex flex-col justify-between">
+                  <div>
+                    <span className="bg-[#00aeef] text-[#0f172a] text-xs font-black uppercase px-3 py-1 rounded-full">Ruta 1</span>
+                    <h5 className="text-2xl font-black text-white mt-3 mb-3">Mediante un Proveedor o Plataforma</h5>
+                    <p className="text-sm text-slate-300 mb-4">
+                      Ofrece proceso guiado, bandeja de atención, usuarios para el equipo, automatizaciones, gestión de plantillas, integración CRM, informes y soporte.
+                    </p>
+                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl mb-4">
+                      <span className="text-xs font-black uppercase text-[#f59e0b] block mb-2">Ejemplo con YCloud (Revisar 8 puntos):</span>
+                      <p className="text-xs text-slate-300 mb-2">Anuncia plan gratuito, pero las tarifas de mensajes de WhatsApp se cobran por separado. Revisar:</p>
+                      <div className="grid grid-cols-2 gap-1 text-xs text-slate-200 font-semibold">
+                        <span>• N° de usuarios</span>
+                        <span>• Canales incluidos</span>
+                        <span>• Automatización</span>
+                        <span>• Historial</span>
+                        <span>• Costos mensajes</span>
+                        <span>• Impuestos</span>
+                        <span>• Soporte</span>
+                        <span>• Condiciones</span>
+                      </div>
+                    </div>
+                  </div>
+                  <a href="https://www.ycloud.com/pricing?showCompare=true" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 bg-[#00aeef]/20 hover:bg-[#00aeef] text-[#00aeef] hover:text-white border border-[#00aeef] px-4 py-3 rounded-xl text-sm font-black transition-colors">
+                    Consultar planes de YCloud <${ArrowUpRight} className="w-4 h-4"/>
+                  </a>
+                </div>
+
+                <!-- Ruta 2 -->
+                <div className="bg-[#16161a] border-2 border-[#25D366] rounded-[2.5rem] p-8 shadow-xl flex flex-col justify-between">
+                  <div>
+                    <span className="bg-[#25D366] text-[#0f172a] text-xs font-black uppercase px-3 py-1 rounded-full">Ruta 2</span>
+                    <h5 className="text-2xl font-black text-white mt-3 mb-3">Coexistencia (App + API)</h5>
+                    <p className="text-sm text-slate-300 mb-4">
+                      Permite, en cuentas compatibles, utilizar la app de WhatsApp Business y la plataforma/API con el mismo número.
+                    </p>
+                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl mb-4">
+                      <span className="text-xs font-black uppercase text-[#25D366] block mb-2">9 puntos a revisar antes de activar:</span>
+                      <ul className="text-xs text-slate-200 space-y-1 font-medium">
+                        <li>• Elegibilidad del número/cuenta y soporte del proveedor</li>
+                        <li>• Qué ocurrirá con el historial, contactos y sincronización</li>
+                        <li>• Qué funciones seguirán disponibles y quién administrará</li>
+                        <li>• Permisos del proveedor, costos y cómo retirar la conexión</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="bg-amber-950/40 border border-amber-500/40 p-3.5 rounded-xl text-xs text-amber-200 font-bold">
+                    ⚠️ No se recomienda activar o migrar un número en plena clase sin revisar previamente estas condiciones.
+                  </div>
+                </div>
+
+                <!-- Ruta 3 -->
+                <div className="bg-[#16161a] border-2 border-purple-500 rounded-[2.5rem] p-8 shadow-xl flex flex-col justify-between">
+                  <div>
+                    <span className="bg-purple-500 text-white text-xs font-black uppercase px-3 py-1 rounded-full">Ruta 3</span>
+                    <h5 className="text-2xl font-black text-white mt-3 mb-3">Conexión Directa con Cloud API</h5>
+                    <p className="text-sm text-slate-300 mb-4">
+                      Para organizaciones con equipo técnico o proveedor de desarrollo que necesitan una solución propia.
+                    </p>
+                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl mb-4">
+                      <span className="text-xs font-black uppercase text-purple-400 block mb-2">6 Requisitos Técnicos:</span>
+                      <ul className="text-xs text-slate-200 space-y-1 font-medium">
+                        <li>1. Configuración comercial adecuada</li>
+                        <li>2. Número registrado</li>
+                        <li>3. Aplicación y permisos correspondientes</li>
+                        <li>4. Solución técnica para recibir y enviar mensajes</li>
+                        <li>5. Gestión de seguridad y accesos</li>
+                        <li>6. Mantenimiento y soporte continuo</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="bg-slate-900 border border-slate-700 p-3.5 rounded-xl text-xs text-slate-300 font-semibold">
+                    Ideal para desarrollos a medida e integraciones empresariales profundas.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tabla ¿Cuál ruta elegir? -->
+              <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 md:p-8">
+                <h5 className="text-xl font-black text-white mb-4 text-center">Guía Rápida: ¿Cuál Ruta Elegir según la Necesidad?</h5>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  ${tablaRutas.map((item, i) => html`
+                    <div key=${i} className="bg-[#16161a] border border-slate-800 p-5 rounded-2xl">
+                      <span className="text-xs font-black uppercase text-slate-400 block mb-1">Necesidad</span>
+                      <p className="text-sm text-white font-bold mb-3">${item.necesidad}</p>
+                      <span className="text-xs font-black uppercase text-[#00aeef] block mb-1">Ruta a evaluar</span>
+                      <p className="text-sm text-emerald-300 font-black">${item.ruta}</p>
+                    </div>
+                  `)}
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 11: La API y la protección del número -->
+            <div className="bg-gradient-to-br from-slate-900 to-[#0f172a] border-2 border-rose-500/50 rounded-[3rem] p-8 md:p-12 shadow-2xl">
+              <div className="grid lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-7">
+                  <span className="text-xs font-black uppercase tracking-widest text-rose-400 block mb-2">Sección 11 · Mito vs Realidad</span>
+                  <h4 className="text-3xl md:text-4xl font-black text-white mb-4">¿La API protege automáticamente el número?</h4>
+                  <p className="text-lg text-slate-300 mb-6">
+                    <strong>No existe garantía de que un número nunca será restringido por utilizar la API.</strong> La empresa sigue siendo responsable de 8 deberes críticos:
+                  </p>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    ${[
+                      "1. Obtener consentimiento",
+                      "2. Enviar información relevante",
+                      "3. Respetar políticas de Meta",
+                      "4. Usar plantillas de forma correcta",
+                      "5. Gestionar la frecuencia de envío",
+                      "6. Atender solicitudes de baja",
+                      "7. Cuidar la seguridad y los accesos",
+                      "8. Revisar los reportes y la calidad"
+                    ].map((resp, i) => html`
+                      <div key=${i} className="bg-[#16161a] border border-slate-800 px-4 py-3 rounded-xl text-sm text-white font-bold flex items-center gap-2">
+                        <${ShieldCheck} className="w-4 h-4 text-[#25D366] shrink-0"/> ${resp}
+                      </div>
+                    `)}
+                  </div>
+                </div>
+                <div className="lg:col-span-5 space-y-5">
+                  <div className="bg-rose-950/40 border border-rose-500/40 p-6 rounded-2xl">
+                    <span className="text-xs font-black uppercase tracking-widest text-rose-300 block mb-2">Ejemplo de Riesgo con API Oficial</span>
+                    <p className="text-base text-slate-200 leading-relaxed">
+                      Una empresa conecta su número a una plataforma oficial y envía una promoción a una base que no pidió recibirla. Aunque la conexión sea oficial, las personas bloquearán o reportarán los mensajes, afectando la calidad y capacidad de envío.
+                    </p>
+                  </div>
+                  <div className="bg-[#16161a] border-l-4 border-[#f59e0b] p-6 rounded-2xl">
+                    <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-1">Frase para Enseñar</span>
+                    <p className="text-lg text-white font-bold">
+                      “La conexión oficial nos da herramientas para gestionar el canal. La confianza del cliente se gana con mensajes esperados, relevantes y bien atendidos”.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Bloque3MensajesYVentanas = () => {
+      const categorias = [
+        {
+          id: "14.1. Servicio",
+          color: "border-[#00aeef]",
+          accent: "text-[#00aeef]",
+          desc: "Mensajes utilizados para responder y atender consultas de los clientes dentro de las condiciones aplicables a la ventana de atención. Objetivo: resolver una necesidad planteada por el cliente.",
+          ejemplo: 'Cliente: “¿En qué horario puedo visitar el local?”\nEmpresa: “Atendemos de lunes a sábado. Si me indicas qué sede deseas visitar, te comparto el horario correspondiente”.',
+          nota: "Se aplica dentro de la ventana de atención iniciada por el cliente."
+        },
+        {
+          id: "14.2. Marketing",
+          color: "border-[#f59e0b]",
+          accent: "text-[#f59e0b]",
+          desc: "Mensajes comerciales que buscan generar interés, promover una oferta, presentar novedades o reactivar una relación comercial (lanzamientos, promociones, invitaciones, recomendaciones, recuperación de interés).",
+          ejemplo: '“Hola, Ana. Nos autorizaste a enviarte información sobre vehículos para reparto. Tenemos una nueva alternativa que podría interesarte. ¿Deseas conocer sus características?”',
+          nota: "Punto importante: Agregar una promoción a un mensaje que parecía informativo puede hacer que la plantilla se clasifique como marketing."
+        },
+        {
+          id: "14.3. Utilidad",
+          color: "border-[#25D366]",
+          accent: "text-[#25D366]",
+          desc: "Mensajes relacionados con una acción, gestión o transacción específica del cliente y que no incluyen promoción (confirmación de cita, información de gestión solicitada, aviso de pedido, entrega o recordatorio).",
+          ejemplo: '“Hola, Luis. Te confirmamos tu cita de atención para el martes a las 10:00 a. m. en la sede acordada”.',
+          nota: '⚠️ Ejemplo que cambia de intención: “Tu cita es el martes a las 10:00 a. m. Aprovecha también nuestras promociones especiales” → Introduce promoción, no conviene asumir que mantendrá categoría de utilidad.'
+        },
+        {
+          id: "14.4. Autenticación",
+          color: "border-purple-500",
+          accent: "text-purple-400",
+          desc: "Mensajes que permiten verificar la identidad de una persona mediante un código de un solo uso u otro mecanismo admitido.",
+          ejemplo: '“Tu código de verificación es 483921. No lo compartas con nadie”.',
+          nota: "🔒 Regla de seguridad: Una empresa NUNCA debe pedir al cliente que le reenvíe un código personal de verificación."
+        }
+      ];
+
+      const ejercicios = [
+        { letra: "Mensaje A", texto: "“Tu cita de mantenimiento está programada para mañana a las 9:00 a. m.”", resp: "Utilidad, si corresponde a una cita real y no incluye promoción." },
+        { letra: "Mensaje B", texto: "“Este mes tenemos una nueva promoción para renovar tu vehículo”.", resp: "Marketing." },
+        { letra: "Mensaje C", texto: "Cliente: “¿Dónde están ubicados?” — Empresa: “Estamos en la sede indicada. Te comparto la ubicación”.", resp: "Atención de Servicio dentro de las condiciones aplicables." },
+        { letra: "Mensaje D", texto: "“Tu código para ingresar a la plataforma es 794105”.", resp: "Autenticación." }
+      ];
+
+      return html`
+        <section id="mensajes-ventanas" className="bg-[#111827] border-t-4 border-[#f59e0b] slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-[#f59e0b] uppercase tracking-[0.2em] mb-4">Bloque 3 (Parte 1) · Secciones 12, 13, 14 y 15</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Inicio de Conversación, Ventana de 24h y Categorías</h3>
+              <p className="text-2xl text-slate-300 max-w-5xl mx-auto">
+                Cómo empieza la interacción, cómo funciona la ventana de atención y cómo clasifica Meta cada tipo de mensaje.
+              </p>
+            </div>
+
+            <!-- Secciones 12 y 13 -->
+            <div className="grid lg:grid-cols-12 gap-8 mb-16">
+              <div className="lg:col-span-7 bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl">
+                <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 12 · El Origen de la Interacción</span>
+                <h4 className="text-3xl font-black text-white mb-6">¿Quién Inicia la Conversación? (3 Escenarios)</h4>
+                <div className="space-y-4">
+                  <div className="bg-[#16161a] border-l-4 border-[#25D366] p-5 rounded-2xl">
+                    <span className="text-xs font-black uppercase text-[#25D366] block mb-1">Escenario A: El cliente escribe primero</span>
+                    <p className="text-sm text-white font-semibold mb-1">“Hola, quisiera información sobre este vehículo”.</p>
+                    <p className="text-xs text-slate-300">La empresa recibe una consulta y puede atenderla conforme a las reglas de la ventana de atención.</p>
+                  </div>
+                  <div className="bg-[#16161a] border-l-4 border-[#f59e0b] p-5 rounded-2xl">
+                    <span className="text-xs font-black uppercase text-[#f59e0b] block mb-1">Escenario B: La empresa inicia el contacto</span>
+                    <p className="text-sm text-white font-semibold mb-1">“Hola, tenemos una nueva alternativa para flotas. ¿Deseas conocerla?”</p>
+                    <p className="text-xs text-slate-300">En la plataforma/API, los mensajes iniciados por la empresa están sujetos a reglas de Meta y requieren plantilla aprobada cuando corresponde.</p>
+                  </div>
+                  <div className="bg-[#16161a] border-l-4 border-purple-500 p-5 rounded-2xl">
+                    <span className="text-xs font-black uppercase text-purple-400 block mb-1">Escenario C: La empresa retoma una conversación</span>
+                    <p className="text-xs text-slate-300">Un prospecto pidió información hace varios días y el asesor quiere volver a escribir. Si la ventana de atención ya terminó, debe utilizar una plantilla aprobada cuando corresponda.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5 bg-slate-900 border-2 border-[#00aeef]/50 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 13 · Regla Operativa</span>
+                  <h4 className="text-3xl font-black text-white mb-4">La Ventana de Atención de 24 Horas</h4>
+                  <p className="text-base text-slate-300 mb-5">
+                    Cuando un cliente envía un mensaje, se abre una ventana de atención al cliente que <strong>se actualiza con cada nuevo mensaje del cliente.</strong>
+                  </p>
+                  <div className="bg-[#16161a] border border-slate-800 p-5 rounded-2xl mb-5 text-sm space-y-2">
+                    <p className="text-slate-200"><strong className="text-[#00aeef]">Lunes 10:00 a. m.:</strong> El cliente escribe.</p>
+                    <p className="text-slate-200"><strong className="text-[#25D366]">Lunes 11:00 a. m.:</strong> La empresa responde.</p>
+                    <p className="text-slate-200"><strong className="text-[#f59e0b]">Martes 9:00 a. m.:</strong> El cliente vuelve a escribir → <strong>Actualiza la ventana.</strong></p>
+                  </div>
+                </div>
+                <div className="bg-rose-950/40 border border-rose-500/40 p-5 rounded-2xl text-sm">
+                  <strong className="text-rose-400 block uppercase text-xs mb-1">⚠️ Lo que NO debemos enseñar:</strong>
+                  <p className="text-slate-200">
+                    No enseñar: <em>“Como el cliente escribió, todas las respuestas son siempre gratuitas”</em>. La ventana determina qué tipos de mensajes enviar; el costo es otra pregunta y debe revisarse según las tarifas vigentes.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 14: Las 4 categorías -->
+            <div className="mb-16">
+              <div className="text-center mb-10">
+                <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-2">Sección 14 · Clasificación Oficial</span>
+                <h4 className="text-3xl md:text-5xl font-black text-white">Las Cuatro Categorías de Mensajes</h4>
+              </div>
+              <div className="grid md:grid-cols-2 gap-8">
+                ${categorias.map((cat, idx) => html`
+                  <div key=${idx} className=${`bg-[#16161a] border-2 ${cat.color} rounded-[2.5rem] p-8 shadow-xl flex flex-col justify-between`}>
+                    <div>
+                      <h5 className=${`text-2xl md:text-3xl font-black ${cat.accent} mb-3`}>${cat.id}</h5>
+                      <p className="text-base text-slate-300 mb-5 leading-relaxed">${cat.desc}</p>
+                      <div className="prompt-box relative mb-5">
+                        <${CopyButton} text=${cat.ejemplo} />
+                        <span className="text-xs uppercase font-bold text-slate-400 block mb-2">Ejemplo Práctico:</span>
+                        <p className="text-sm text-emerald-300 whitespace-pre-line pr-24">${cat.ejemplo}</p>
+                      </div>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-xs sm:text-sm text-slate-200 font-medium">
+                      ${cat.nota}
+                    </div>
+                  </div>
+                `)}
+              </div>
+            </div>
+
+            <!-- Sección 15: Ejercicio -->
+            <div className="bg-gradient-to-br from-[#f59e0b] to-[#d97706] rounded-[3.5rem] p-8 md:p-12 border-4 border-yellow-300 shadow-[0_0_60px_rgba(245,158,11,0.2)] text-slate-950">
+              <div className="text-center mb-8">
+                <span className="bg-slate-950 text-[#f59e0b] text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full inline-block mb-2">Sección 15 · Ejercicio en Clase</span>
+                <h4 className="text-3xl md:text-4xl font-black">¿Qué Tipo de Mensaje Es?</h4>
+              </div>
+              <div className="grid md:grid-cols-2 gap-5">
+                ${ejercicios.map((ej, i) => html`
+                  <div key=${i} className="bg-slate-950/90 text-white p-6 rounded-3xl border border-slate-800">
+                    <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-1">${ej.letra}</span>
+                    <p className="text-lg font-bold mb-3">${ej.texto}</p>
+                    <p className="text-sm text-emerald-400 font-semibold border-t border-slate-800 pt-2">
+                      <strong>Respuesta orientativa:</strong> ${ej.resp}
+                    </p>
+                  </div>
+                `)}
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Bloque3LimitesYCostos = () => {
+      const tarifasPeru = [
+        { cat: "Marketing", usd: "US$ 0,0703", obs: "Mensajes comerciales, promociones, lanzamientos y reactivación" },
+        { cat: "Utilidad", usd: "US$ 0,0300", obs: "Confirmaciones, gestiones o transacciones específicas sin promoción" },
+        { cat: "Autenticación", usd: "US$ 0,0300", obs: "Códigos de verificación de identidad de un solo uso" },
+        { cat: "Servicio (superada la capa gratuita aplicable)", usd: "US$ 0,0300", obs: "Una vez superados los 1.000 mensajes de servicio gratuitos/mes por número" }
+      ];
+
+      return html`
+        <section id="limites-costos" className="bg-[#0a0a0a] border-t border-slate-800 slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-emerald-400 uppercase tracking-[0.2em] mb-4">Bloque 3 (Parte 2) · Secciones 16, 17, 18, 19 y 20</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Límites de Envío, Componentes del Costo y Tarifas Perú</h3>
+              <p className="text-2xl text-slate-400 max-w-5xl mx-auto">
+                Qué se cuenta realmente en los límites de capacidad, la capa de 1.000 mensajes de servicio y ejercicio práctico de presupuesto en Perú.
+              </p>
+            </div>
+
+            <!-- Secciones 16 y 17 -->
+            <div className="grid lg:grid-cols-2 gap-8 mb-14">
+              <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 16 · Capacidad y Escalamiento</span>
+                  <h4 className="text-3xl font-black text-white mb-4">Límites de Envío: ¿Qué se Cuenta Realmente?</h4>
+                  <p className="text-sm text-slate-300 mb-4">
+                    Hay que distinguir 7 conceptos: <strong>Cantidad de mensajes, Cantidad de personas únicas contactadas, Cantidad de conversaciones, Ventana de atención, Límite en difusión app, Límite de capacidad de plataforma y Restricciones por calidad.</strong>
+                  </p>
+                  <div className="bg-[#16161a] border-l-4 border-[#f59e0b] p-5 rounded-2xl mb-4">
+                    <span className="text-xs font-black uppercase text-[#f59e0b] block mb-1">Ejemplo: 250 personas únicas y NO 250 mensajes</span>
+                    <p className="text-sm text-slate-200">
+                      Si un portafolio tiene límite de 250 usuarios únicos para mensajes iniciados por la empresa en un período móvil de 24 horas y contacta a 150 personas únicas, aún tiene 100 espacios bajo ese cálculo, pero debe cumplir todas las reglas.
+                    </p>
+                  </div>
+                  <ul className="text-xs sm:text-sm text-slate-300 space-y-1.5 mb-4 font-medium">
+                    <li>• El límite NO es un permiso para hacer spam ni todas las cuentas tienen el mismo nivel.</li>
+                    <li>• Puede ser compartido entre números del mismo portafolio y cambiar según Meta.</li>
+                    <li>• <strong>¿Cómo aumenta?</strong> Verificación del negocio, uso de plataforma y buena calidad (la verificación sola no garantiza incremento inmediato). Revisar en WhatsApp Manager.</li>
+                  </ul>
+                </div>
+                <a href="https://help.manychat.com/en/articles/17742177-whatsapp-messaging-limits-how-they-work-and-how-to-scale-effectively" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-xs font-black text-[#00aeef] hover:underline">
+                  Referencia: límites y escalamiento de mensajería (Manychat) <${ArrowUpRight} className="w-4 h-4"/>
+                </a>
+              </div>
+
+              <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-emerald-400 block mb-2">Sección 17 y 18 · Estructura Económica</span>
+                  <h4 className="text-3xl font-black text-white mb-4">¿Cuánto Cuesta la API y la Capa de 1.000 Mensajes?</h4>
+                  <div className="bg-[#16161a] border border-emerald-500/40 p-5 rounded-2xl mb-4">
+                    <span className="text-xs font-black uppercase text-emerald-400 block mb-1">Fórmula para Separar Componentes del Costo Total:</span>
+                    <p className="text-base text-white font-black">
+                      Costo mensajes Meta + Proveedor/CRM + Usuarios adicionales + Automatización/IA + Impuestos
+                    </p>
+                    <p className="text-xs text-slate-400 mt-2">
+                      Depende de: Categoría, país destinatario, cantidad entregada, ventanas/excepciones, proveedor, moneda, tarifas vigentes y descuentos por volumen.
+                    </p>
+                  </div>
+                  <div className="bg-[#16161a] border border-slate-800 p-5 rounded-2xl mb-4">
+                    <span className="text-xs font-black uppercase text-[#f59e0b] block mb-1">Sección 18 · Capa de 1.000 Mensajes de Servicio (Desde 1 Oct 2026)</span>
+                    <ul className="text-xs sm:text-sm text-slate-200 space-y-1 font-medium">
+                      <li>• <strong>1.000 mensajes de servicio gratuitos al mes por número comercial</strong> (no son promocionales).</li>
+                      <li>• No se acumulan para el siguiente mes; las plantillas tienen sus propias reglas.</li>
+                      <li>• <em>Precisión:</em> Contrastar siempre en la cuenta, documentación de Meta y el proveedor antes de presupuestar.</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-4 text-xs font-black">
+                  <a href="https://respond.io/help/whatsapp/whatsapp-pricing" target="_blank" rel="noreferrer" className="text-[#00aeef] hover:underline flex items-center gap-1">Respond.io: precios <${ArrowUpRight} className="w-3.5 h-3.5"/></a>
+                  <a href="https://support.kommo.com/docs/updated-pricing-rules-for-whatsapp-business" target="_blank" rel="noreferrer" className="text-[#f59e0b] hover:underline flex items-center gap-1">Kommo: reglas de precios <${ArrowUpRight} className="w-3.5 h-3.5"/></a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 19: Tarifas Perú y Ejemplo de Presupuesto -->
+            <div className="grid lg:grid-cols-12 gap-8 mb-14 items-stretch">
+              <div className="lg:col-span-6 bg-[#16161a] border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-2">Sección 19 · Tarifas de Referencia para Perú (Oct 2026)</span>
+                  <h4 className="text-2xl md:text-3xl font-black text-white mb-6">Valores Referenciales en USD por Mensaje</h4>
+                  <div className="overflow-x-auto mb-6">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="border-b border-slate-700 text-xs uppercase text-slate-400">
+                          <th className="py-3 px-3">Categoría</th>
+                          <th className="py-3 px-3 text-emerald-400">Referencia USD</th>
+                          <th className="py-3 px-3">Uso</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800 text-sm">
+                        ${tarifasPeru.map((t, i) => html`
+                          <tr key=${i}>
+                            <td className="py-3.5 px-3 font-black text-white">${t.cat}</td>
+                            <td className="py-3.5 px-3 font-mono font-black text-emerald-300 text-base">${t.usd}</td>
+                            <td className="py-3.5 px-3 text-slate-300 text-xs">${t.obs}</td>
+                          </tr>
+                        `)}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                    *Cifras referenciales para destinatarios con número de Perú. No son cotización definitiva y no incluyen impuestos, cargos del proveedor ni excepciones.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-4 text-xs font-black">
+                  <a href="https://www.calypso.so/whatsapp-api-pricing/peru" target="_blank" rel="noreferrer" className="text-[#00aeef] hover:underline flex items-center gap-1">Referencia tarifas Perú <${ArrowUpRight} className="w-3.5 h-3.5"/></a>
+                  <a href="https://whatsappbusiness.com/products/platform-pricing/" target="_blank" rel="noreferrer" className="text-[#25D366] hover:underline flex items-center gap-1">Calculadora pública WhatsApp <${ArrowUpRight} className="w-3.5 h-3.5"/></a>
+                </div>
+              </div>
+
+              <div className="lg:col-span-6 bg-slate-900 border-2 border-emerald-500/50 rounded-[3rem] p-8 md:p-10 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-emerald-400 block mb-2">Ejercicio Práctico de Presupuesto (1 Número Comercial en Perú)</span>
+                  <h4 className="text-2xl md:text-3xl font-black text-white mb-4">Simulación Mensual Paso a Paso</h4>
+                  <p className="text-sm text-slate-300 mb-4">
+                    Supuesto: <strong>2.000 mensajes de servicio</strong> + <strong>500 plantillas de marketing</strong> + <strong>200 plantillas de utilidad</strong> entregadas en el mes:
+                  </p>
+                  <div className="space-y-3 mb-6 font-mono text-sm">
+                    <div className="bg-[#16161a] border border-slate-800 p-4 rounded-2xl flex justify-between items-center">
+                      <div>
+                        <span className="text-[#00aeef] font-bold block">1. Servicio:</span>
+                        <span className="text-xs text-slate-400">2.000 − 1.000 gratuitos = 1.000 × US$ 0,03</span>
+                      </div>
+                      <span className="text-lg font-black text-white">US$ 30,00</span>
+                    </div>
+                    <div className="bg-[#16161a] border border-slate-800 p-4 rounded-2xl flex justify-between items-center">
+                      <div>
+                        <span className="text-[#f59e0b] font-bold block">2. Marketing:</span>
+                        <span className="text-xs text-slate-400">500 plantillas × US$ 0,0703</span>
+                      </div>
+                      <span className="text-lg font-black text-white">US$ 35,15</span>
+                    </div>
+                    <div className="bg-[#16161a] border border-slate-800 p-4 rounded-2xl flex justify-between items-center">
+                      <div>
+                        <span className="text-[#25D366] font-bold block">3. Utilidad:</span>
+                        <span className="text-xs text-slate-400">200 plantillas × US$ 0,0300</span>
+                      </div>
+                      <span className="text-lg font-black text-white">US$ 6,00</span>
+                    </div>
+                    <div className="bg-emerald-950/50 border-2 border-emerald-500 p-4 rounded-2xl flex justify-between items-center">
+                      <span className="text-emerald-300 font-bold">TOTAL REFERENCIAL DE MENSAJES:</span>
+                      <span className="text-2xl font-black text-emerald-400">US$ 71,15</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-[#16161a] border-l-4 border-[#f59e0b] p-4 rounded-xl text-xs sm:text-sm text-slate-200">
+                  <strong>Aprendizaje:</strong> La pregunta no es <em>“¿La API es gratis o pagada?”</em>, sino <strong>“¿Qué software utilizaré, cuántos mensajes enviaré, de qué categoría, a qué mercado y bajo qué condiciones?”</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 20: Ventanas especiales de entrada -->
+            <div className="bg-slate-900 border border-slate-700 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div>
+                <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-1">Sección 20 · Ventanas Especiales de Entrada (72 Horas)</span>
+                <p className="text-base md:text-lg text-slate-200">
+                  Cuando una persona inicia conversación desde ciertos anuncios que llevan a WhatsApp o botones de una página de Facebook, Meta describe una <strong>ventana de 72 horas para mensajes sin cargo en escenarios elegibles</strong>. Siempre separar: <strong>1) Costo de mensajes WhatsApp</strong>, <strong>2) Inversión publicitaria del anuncio</strong> y <strong>3) Costo del proveedor o CRM</strong>.
+                </p>
+              </div>
+              <a href="https://whatsappbusiness.com/products/platform-pricing/" target="_blank" rel="noreferrer" className="shrink-0 bg-[#00aeef] text-[#0f172a] px-6 py-3.5 rounded-2xl font-black text-sm flex items-center gap-2 hover:bg-white transition-colors">
+                Precios y puntos de entrada <${ArrowUpRight} className="w-4 h-4"/>
+              </a>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Bloque4CalidadYConfianza = () => {
+      const senales = [
+        { num: "1. Entregas", desc: "¿Cuántos mensajes llegaron efectivamente?" },
+        { num: "2. Lecturas (cuando disponibles)", desc: "¿Cuántos figuran como leídos? Una lectura no siempre significa interés comercial." },
+        { num: "3. Respuestas", desc: "¿Cuántas personas respondieron? Puede indicar interés, consulta o solicitud de baja." },
+        { num: "4. Conversaciones que avanzan", desc: "¿Cuántas terminaron en cita, reunión, cotización, compra o consulta resuelta?" },
+        { num: "5. Bloqueos y reportes", desc: "¿Hay indicios de que el contenido fue inesperado o molesto?" },
+        { num: "6. Solicitudes de baja", desc: "¿Las personas están pidiendo que no se les escriba?" }
+      ];
+
+      const malasPracticas = [
+        "1. Comprar bases de datos y escribir sin contexto.",
+        "2. Enviar promociones a personas que no las solicitaron.",
+        "3. Insistir todos los días sin recibir respuesta.",
+        "4. Enviar mensajes ambiguos que no identifican a la empresa.",
+        "5. Prometer precios o condiciones que no están confirmados.",
+        "6. Enviar el mismo contenido a todos los contactos.",
+        "7. Ignorar solicitudes de baja.",
+        "8. Utilizar herramientas no oficiales que prometen envíos masivos sin límites.",
+        "9. Tratar de ocultar una promoción dentro de una plantilla de utilidad.",
+        "10. No responder cuando el cliente sí demuestra interés."
+      ];
+
+      const msgContextual = "Hola, María. Soy Carlos de [empresa]. Nos autorizaste a enviarte información sobre vehículos para trabajo. Tenemos una nueva alternativa y puedo compartirte sus características si todavía te interesa.";
+      const msgPermiso = "¿Te gustaría recibir por WhatsApp información sobre novedades y opciones de vehículos para tu empresa?";
+      const msgBaja = "De acuerdo. No te enviaremos novedades comerciales. Gracias por indicárnoslo.";
+
+      return html`
+        <section id="calidad" className="bg-[#111827] border-t-4 border-rose-500 slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-rose-400 uppercase tracking-[0.2em] mb-4">Bloque 4 · Secciones 21, 22, 23 y 24</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Calidad del Número y Confianza</h3>
+              <p className="text-2xl text-slate-300 max-w-5xl mx-auto">
+                Cómo evalúa Meta la recepción de mensajes, las 6 señales que marketing debe medir, prácticas que deterioran la cuenta y gestión del consentimiento.
+              </p>
+            </div>
+
+            <!-- Secciones 21 y 22 -->
+            <div className="grid lg:grid-cols-12 gap-8 mb-14">
+              <div className="lg:col-span-5 bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-rose-400 block mb-2">Sección 21 · Cómo Funciona la Calidad</span>
+                  <h4 className="text-3xl font-black text-white mb-4">¿Qué es la Calidad del Número?</h4>
+                  <p className="text-base text-slate-300 mb-5">
+                    Referencia que evalúa cómo se reciben los mensajes asociados a un número comercial a partir de señales como <strong>bloqueos, reportes y quejas por mensajes no deseados</strong>, además de la calidad de plantillas.
+                  </p>
+                  <div className="bg-rose-950/40 border border-rose-500/40 p-5 rounded-2xl mb-4">
+                    <span className="text-xs font-black uppercase text-rose-400 block mb-1">❌ Lo que NO debemos afirmar:</span>
+                    <p className="text-sm text-slate-200">
+                      Meta no publica una fórmula exacta. No corresponde decir: <em>“Si diez personas no responden, WhatsApp bajará tu calidad”</em>.
+                    </p>
+                  </div>
+                  <div className="bg-emerald-950/40 border border-emerald-500/40 p-5 rounded-2xl">
+                    <span className="text-xs font-black uppercase text-emerald-400 block mb-1">✅ Lo que SÍ podemos decir:</span>
+                    <p className="text-sm text-slate-200 font-semibold">
+                      “Si los mensajes son inesperados o irrelevantes, aumentan las posibilidades de que las personas bloqueen o reporten el número”.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-7 bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl">
+                <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 22 · Analítica de Conversación</span>
+                <h4 className="text-3xl font-black text-white mb-6">6 Señales que Marketing Debe Analizar</h4>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  ${senales.map((s, i) => html`
+                    <div key=${i} className="bg-[#16161a] border border-slate-800 p-5 rounded-2xl">
+                      <span className="text-base font-black text-[#00aeef] block mb-1">${s.num}</span>
+                      <p className="text-sm text-slate-300 leading-relaxed">${s.desc}</p>
+                    </div>
+                  `)}
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 23: Malas prácticas y comparativa -->
+            <div className="bg-[#16161a] border border-slate-700 rounded-[3rem] p-8 md:p-12 shadow-2xl mb-14">
+              <div className="text-center mb-8">
+                <span className="text-xs font-black uppercase tracking-widest text-rose-400 block mb-2">Sección 23 · Prevención de Bloqueos</span>
+                <h4 className="text-3xl font-black text-white">10 Prácticas que Deterioran la Relación con el Cliente</h4>
+              </div>
+              <div className="grid md:grid-cols-2 gap-3.5 mb-10">
+                ${malasPracticas.map((mp, i) => html`
+                  <div key=${i} className="bg-slate-900/90 border border-slate-800 px-5 py-3.5 rounded-2xl text-sm text-slate-200 font-semibold flex items-center gap-3">
+                    <span className="text-rose-400 font-black">✕</span> ${mp}
+                  </div>
+                `)}
+              </div>
+
+              <div className="grid lg:grid-cols-2 gap-8">
+                <div className="bg-rose-950/30 border-2 border-rose-500/40 p-6 rounded-3xl">
+                  <span className="text-xs font-black uppercase tracking-widest text-rose-400 block mb-2">❌ Mensaje Genérico (Inadecuado)</span>
+                  <p className="font-mono text-lg text-white font-bold mb-4">“Hola, tenemos una gran promoción. Responde YA”.</p>
+                  <p className="text-xs text-rose-200">
+                    <strong>Problemas:</strong> No identifica quién escribe, no explica por qué recibe el mensaje, no presenta propuesta relevante y usa presión sin aportar información.
+                  </p>
+                </div>
+                <div className="prompt-box relative border-2 border-[#25D366]">
+                  <${CopyButton} text=${msgContextual} />
+                  <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-2">✅ Versión Más Contextual (Recomendada)</span>
+                  <p className="text-base text-emerald-300 pr-24 mb-3">“${msgContextual}”</p>
+                  <p className="text-xs text-slate-400 font-sans">Explica claramente quién escribe, por qué y qué puede recibir el cliente.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 24: Consentimiento y expectativa -->
+            <div className="bg-slate-900 border-2 border-[#25D366]/50 rounded-[3rem] p-8 md:p-12 shadow-2xl">
+              <div className="grid lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-5">
+                  <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-2">Sección 24 · Estrategia Sana</span>
+                  <h4 className="text-3xl font-black text-white mb-4">Consentimiento y Expectativa</h4>
+                  <p className="text-base text-slate-300 mb-4">Antes del envío debemos poder responder estas 6 preguntas:</p>
+                  <ul className="space-y-2 text-sm text-slate-200 font-semibold">
+                    <li>1. ¿La persona aceptó recibir información?</li>
+                    <li>2. ¿Sabe qué empresa le escribirá?</li>
+                    <li>3. ¿Qué tipo de información espera?</li>
+                    <li>4. ¿Cómo puede dejar de recibirla?</li>
+                    <li>5. ¿La base está actualizada?</li>
+                    <li>6. ¿La campaña coincide con el interés que expresó?</li>
+                  </ul>
+                </div>
+                <div className="lg:col-span-7 space-y-5">
+                  <div className="prompt-box relative">
+                    <${CopyButton} text=${msgPermiso} />
+                    <span className="text-xs font-black uppercase text-[#00aeef] block mb-2">Ejemplo de Solicitud de Consentimiento:</span>
+                    <p className="text-sm text-sky-300 pr-24">“${msgPermiso}”</p>
+                  </div>
+                  <div className="prompt-box relative">
+                    <${CopyButton} text=${msgBaja} />
+                    <span className="text-xs font-black uppercase text-[#f59e0b] block mb-2">Si la persona dice que NO (Respeto inmediato y registro de baja):</span>
+                    <p className="text-sm text-amber-300 pr-24">“${msgBaja}”</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Bloque5HerramientasAppParte1 = () => {
+      const descPerfil = "Ayudamos a empresas a encontrar soluciones de movilidad y vehículos para sus operaciones. Escríbenos para conocer las alternativas disponibles";
+      const guionCatalogo = "Para enviarte una opción útil, ¿el vehículo lo necesitas para reparto urbano, carga interprovincial u otra operación?";
+      const msgBienvenida = "¡Hola! Gracias por escribir a [empresa]. Queremos orientarte de la mejor manera. Cuéntanos: ¿buscas información para una compra personal, para tu empresa o para un servicio?";
+      const msgAusencia = "Gracias por escribir a [empresa]. En este momento estamos fuera de nuestro horario de atención. Déjanos tu consulta y el equipo la revisará durante el próximo horario disponible";
+      const rrHorario = "Con gusto te ayudo. Indícame qué sede deseas visitar y te comparto su horario de atención";
+      const rrCorp = "Para orientarte mejor, ¿me cuentas qué actividad realiza tu empresa y qué tipo de solución estás buscando?";
+      const rrPrecio = "Puedo ayudarte con la información. El precio depende del producto o versión y de las condiciones vigentes. ¿Qué alternativa estás evaluando?";
+
+      return html`
+        <section id="herramientas-app" className="bg-[#0a0a0a] border-t-4 border-[#25D366] slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-[#25D366] uppercase tracking-[0.2em] mb-4">Bloque 5 (Parte 1) · Secciones 25, 26, 27, 28, 29 y 30</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Herramientas de WhatsApp Business para Marketing y Ventas</h3>
+              <p className="text-2xl text-slate-400 max-w-5xl mx-auto">
+                Perfil comercial, catálogo, mensajes de bienvenida y ausencia, respuestas rápidas y sistema de etiquetas.
+              </p>
+            </div>
+
+            <!-- Secciones 25 y 26: Perfil y Catálogo -->
+            <div className="grid lg:grid-cols-2 gap-8 mb-14">
+              <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 25 · La Primera Impresión</span>
+                  <h4 className="text-3xl font-black text-white mb-4">Perfil Comercial</h4>
+                  <p className="text-sm text-slate-300 mb-4">
+                    Responde quién es la empresa, qué ofrece, dónde atiende, qué puede esperar el cliente y cómo se comunica. <strong>8 Elementos a revisar:</strong> Nombre comercial, Imagen, Categoría, Descripción, Horarios, Dirección, Correo/Web e Info actualizada.
+                  </p>
+                  <div className="prompt-box relative mb-4">
+                    <${CopyButton} text=${descPerfil} />
+                    <span className="text-xs font-bold uppercase text-[#00aeef] block mb-1">Ejemplo de Descripción:</span>
+                    <p className="text-sm text-sky-300 pr-24">“${descPerfil}”</p>
+                  </div>
+                  <p className="text-xs text-slate-300 mb-4">
+                    <strong>Trabajo de Marketing:</strong> Asegurar consistencia visual, tono claro, datos correctos, actualización y que la experiencia después del anuncio coincida con lo prometido.
+                  </p>
+                </div>
+                <div className="bg-rose-950/30 border-l-4 border-rose-500 p-4 rounded-xl text-xs text-slate-200">
+                  <strong>Caso:</strong> Si el anuncio invita a una promoción pero el perfil tiene otro nombre y datos desactualizados, el cliente desconfía. <em>La confianza continúa construyéndose dentro de WhatsApp.</em>
+                </div>
+              </div>
+
+              <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-2">Sección 26 · Vitrina Organizada</span>
+                  <h4 className="text-3xl font-black text-white mb-4">Catálogo Comercial</h4>
+                  <p className="text-sm text-slate-300 mb-4">
+                    <strong>Cada ficha puede contener:</strong> Nombre, Imagen, Descripción, Precio (cuando corresponda y esté autorizado), Enlace y datos que ayuden a identificar la opción. Marketing selecciona imágenes claras, descripciones consistentes y evita que ventas improvise.
+                  </p>
+                  <div className="prompt-box relative mb-4">
+                    <${CopyButton} text=${guionCatalogo} />
+                    <span className="text-xs font-bold uppercase text-[#25D366] block mb-1">Caso Vehículo de Trabajo (Preguntar antes de enviar catálogo):</span>
+                    <p className="text-sm text-emerald-300 pr-24">“${guionCatalogo}”</p>
+                  </div>
+                </div>
+                <div className="bg-[#16161a] border-l-4 border-[#25D366] p-4 rounded-xl text-sm text-emerald-200 font-semibold">
+                  <strong>Aprendizaje:</strong> Primero entendemos la necesidad; después enviamos la ficha o información adecuada.
+                </div>
+              </div>
+            </div>
+
+            <!-- Secciones 27, 28 y 29: Bienvenida, Ausencia y Respuestas Rápidas -->
+            <div className="grid lg:grid-cols-12 gap-8 mb-14">
+              <div className="lg:col-span-5 space-y-6">
+                <div className="bg-[#16161a] border border-slate-800 rounded-[2.5rem] p-7 shadow-xl">
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-1">Sección 27 · Primer Contacto</span>
+                  <h5 className="text-2xl font-black text-white mb-2">Mensaje de Bienvenida</h5>
+                  <p className="text-xs text-slate-300 mb-3">Confirma recepción, presenta a la empresa, explica qué hacer y facilita una primera clasificación. <strong>Evitar:</strong> textos largos, pedir muchos datos al inicio o prometer atención inmediata si no se puede cumplir.</p>
+                  <div className="prompt-box relative p-4">
+                    <${CopyButton} text=${msgBienvenida} />
+                    <p className="text-xs text-sky-300 pr-20">“${msgBienvenida}”</p>
+                  </div>
+                </div>
+
+                <div className="bg-[#16161a] border border-slate-800 rounded-[2.5rem] p-7 shadow-xl">
+                  <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-1">Sección 28 · Fuera de Horario</span>
+                  <h5 className="text-2xl font-black text-white mb-2">Mensaje de Ausencia</h5>
+                  <p className="text-xs text-slate-300 mb-3">Comunica la personalidad de la marca con amabilidad y claridad, sin prometer un plazo que el equipo no pueda cumplir.</p>
+                  <div className="prompt-box relative p-4">
+                    <${CopyButton} text=${msgAusencia} />
+                    <p className="text-xs text-amber-300 pr-20">“${msgAusencia}”</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-7 bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-2">Sección 29 · Agilidad y Consistencia</span>
+                  <h4 className="text-3xl font-black text-white mb-3">Respuestas Rápidas</h4>
+                  <p className="text-sm text-slate-300 mb-5">
+                    Ahorran tiempo, mantienen información consistente, reducen errores, facilitan capacitación y permiten adaptar el texto al caso.
+                  </p>
+                  <div className="space-y-4 mb-5">
+                    <div className="prompt-box relative p-4">
+                      <${CopyButton} text=${rrHorario} />
+                      <span className="text-xs font-bold uppercase text-[#00aeef] block mb-1">1. Ejemplo: Horario</span>
+                      <p className="text-xs sm:text-sm text-emerald-300 pr-20">“${rrHorario}”</p>
+                    </div>
+                    <div className="prompt-box relative p-4">
+                      <${CopyButton} text=${rrCorp} />
+                      <span className="text-xs font-bold uppercase text-[#f59e0b] block mb-1">2. Ejemplo: Solicitud de Información Corporativa</span>
+                      <p className="text-xs sm:text-sm text-emerald-300 pr-20">“${rrCorp}”</p>
+                    </div>
+                    <div className="prompt-box relative p-4">
+                      <${CopyButton} text=${rrPrecio} />
+                      <span className="text-xs font-bold uppercase text-[#25D366] block mb-1">3. Ejemplo: Precio</span>
+                      <p className="text-xs sm:text-sm text-emerald-300 pr-20">“${rrPrecio}”</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-[#16161a] border-l-4 border-[#f59e0b] p-4 rounded-xl text-sm text-amber-200 font-bold">
+                  <strong>Regla:</strong> Una respuesta rápida es una base, no una obligación de responder como robot.
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 30: Etiquetas -->
+            <div className="bg-[#16161a] border border-slate-700 rounded-[3rem] p-8 md:p-12 shadow-2xl">
+              <div className="text-center mb-8">
+                <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 30 · Orden Comercial</span>
+                <h4 className="text-3xl font-black text-white">Etiquetas: Etapa Comercial vs Interés</h4>
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
+                  <span className="text-xs font-black uppercase text-[#25D366] block mb-3">8 Etiquetas por Etapa Comercial:</span>
+                  <div className="flex flex-wrap gap-2">
+                    ${["1. Nuevo contacto", "2. Consulta recibida", "3. Necesidad identificada", "4. Información enviada", "5. Reunión o cita pendiente", "6. Seguimiento", "7. Oportunidad cerrada", "8. Postventa"].map((e, i) => html`
+                      <span key=${i} className="bg-[#16161a] border border-[#25D366]/40 text-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold">${e}</span>
+                    `)}
+                  </div>
+                </div>
+                <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
+                  <span className="text-xs font-black uppercase text-[#00aeef] block mb-3">5 Etiquetas por Interés:</span>
+                  <div className="flex flex-wrap gap-2">
+                    ${["• Vehículo para trabajo", "• Movilidad corporativa", "• Servicio", "• Repuestos", "• Consulta general"].map((e, i) => html`
+                      <span key=${i} className="bg-[#16161a] border border-[#00aeef]/40 text-sky-300 px-3 py-1.5 rounded-xl text-xs font-bold">${e}</span>
+                    `)}
+                  </div>
+                </div>
+                <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl flex flex-col justify-between">
+                  <div>
+                    <span className="text-xs font-black uppercase text-[#f59e0b] block mb-2">Acuerdo Marketing + Ventas:</span>
+                    <p className="text-xs text-slate-300 mb-3">Acordar qué significa cada etiqueta, cuándo se coloca, quién la actualiza, qué acción sigue y cómo se revisa el resultado.</p>
+                  </div>
+                  <div className="bg-rose-950/40 border border-rose-500/40 p-3.5 rounded-xl text-xs text-rose-200 font-bold">
+                    ❌ Error frecuente: Crear 20 etiquetas que nadie entiende. Es mejor empezar con pocas que el equipo use de forma consistente.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Bloque5HerramientasAppParte2 = () => {
+      const secuenciaEstados = `Estado 1 — Pregunta: "¿Qué deberías evaluar antes de elegir un vehículo para reparto?"\nEstado 2 — Valor: "Empieza por entender el tipo de carga, la ruta y la frecuencia de uso".\nEstado 3 — Conversación: "Si estás evaluando opciones para tu empresa, escríbenos y cuéntanos qué necesitas".`;
+      const guionPedido = "Entiendo que necesitas información para renovar una unidad de reparto. Para orientarte correctamente, ¿podrías contarme qué tipo de carga transportas y en qué ciudad operas?";
+
+      return html`
+        <section className="bg-[#111827] border-t border-slate-800 slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-[#00aeef] uppercase tracking-[0.2em] mb-4">Bloque 5 (Parte 2) · Secciones 31, 32, 33, 34, 35 y 36</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Estados, Difusión, Grupos, Comunidades, Canales y Pedidos</h3>
+              <p className="text-2xl text-slate-300 max-w-5xl mx-auto">
+                Cómo utilizar cada formato de comunicación dentro de WhatsApp sin invadir ni hacer spam.
+              </p>
+            </div>
+
+            <!-- Secciones 31 y 32: Estados y Listas de Difusión -->
+            <div className="grid lg:grid-cols-2 gap-8 mb-14">
+              <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-2">Sección 31 · Contenido Efímero de Valor</span>
+                  <h4 className="text-3xl font-black text-white mb-3">Estados de WhatsApp</h4>
+                  <p className="text-sm text-slate-300 mb-4">
+                    <strong>¿Qué puede publicar marketing?</strong> Pregunta frecuente, recomendación, demostración, novedad, caso autorizado, testimonio con permiso, invitación a conversar, contenido del equipo/servicio y recordatorios útiles.
+                  </p>
+                  <div className="prompt-box relative mb-4">
+                    <${CopyButton} text=${secuenciaEstados} />
+                    <span className="text-xs font-bold uppercase text-[#25D366] block mb-2">Secuencia de 3 Estados (Vehículos para Trabajo):</span>
+                    <p className="text-xs sm:text-sm text-emerald-300 whitespace-pre-line pr-24">${secuenciaEstados}</p>
+                  </div>
+                </div>
+                <div className="bg-[#16161a] border border-slate-800 p-4 rounded-xl text-xs text-slate-300">
+                  <strong>¿Qué aprende marketing?</strong> Qué preguntas generan respuestas y qué temas se repiten. <em>No debemos asumir que todas las vistas son oportunidades de venta.</em>
+                </div>
+              </div>
+
+              <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-2">Sección 32 · Envío Uno a Uno Segmentado</span>
+                  <h4 className="text-3xl font-black text-white mb-3">Listas de Difusión</h4>
+                  <p className="text-sm text-slate-300 mb-4">
+                    WhatsApp indica que, para recibir mensajes de una lista de difusión de la aplicación, <strong>los destinatarios deben tener guardado el número del negocio en sus contactos.</strong>
+                  </p>
+                  <div className="bg-[#16161a] border border-slate-800 p-4 rounded-2xl mb-4 text-xs text-slate-200 space-y-1.5">
+                    <p><strong className="text-[#f59e0b]">3 Segmentos de ejemplo:</strong> 1) Interesados en vehículos familiares, 2) Empresas que consultaron por soluciones de trabajo, 3) Clientes que solicitaron novedades de servicio.</p>
+                    <p><strong className="text-[#00aeef]">Buen proceso en 7 pasos:</strong> Verificar consentimiento → Elegir segmento → Definir objetivo → Crear mensaje útil → Revisar frecuencia → Respetar bajas → Medir respuestas.</p>
+                  </div>
+                  <p className="text-xs text-slate-400 mb-4">
+                    *Importante: Las listas de la app, las posibles difusiones comerciales de pago y las campañas por API tienen condiciones distintas.
+                  </p>
+                </div>
+                <a href="https://faq.whatsapp.com/653415899610349/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-xs font-black text-[#00aeef] hover:underline">
+                  Centro de ayuda de WhatsApp: Listas de difusión <${ArrowUpRight} className="w-4 h-4"/>
+                </a>
+              </div>
+            </div>
+
+            <!-- Secciones 33, 34, 35 y 36 en grilla de 4 -->
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-[#16161a] border border-slate-800 rounded-[2.5rem] p-8 shadow-xl">
+                <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-1">Sección 33 · Conversación Compartida</span>
+                <h5 className="text-2xl font-black text-white mb-3">Grupos</h5>
+                <p className="text-sm text-slate-300 mb-3">
+                  Útiles para coordinación de actividad, comunidad con interés concreto, capacitación, evento o equipo.
+                </p>
+                <p className="text-xs text-slate-300 mb-3">
+                  <strong>Antes de crearlo:</strong> Definir propósito, explicar participantes, establecer reglas, cuidar privacidad, no agregar personas sin explicar el motivo y nombrar moderadores.
+                </p>
+                <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl text-xs text-slate-200">
+                  <strong>Ejemplo:</strong> Grupo para capacitación de clientes corporativos (horarios, dudas logísticas, preguntas). No convertirlo en promociones constantes.
+                </div>
+              </div>
+
+              <div className="bg-[#16161a] border border-slate-800 rounded-[2.5rem] p-8 shadow-xl">
+                <span className="text-xs font-black uppercase tracking-widest text-purple-400 block mb-1">Sección 34 · Estructura de Grupos</span>
+                <h5 className="text-2xl font-black text-white mb-3">Comunidades</h5>
+                <p className="text-sm text-slate-300 mb-3">
+                  Organiza grupos relacionados bajo una estructura común (eventos, capacitaciones, equipos, participantes).
+                </p>
+                <p className="text-xs text-slate-300 mb-3">
+                  <strong>Para marketing:</strong> Conocer dudas recurrentes, identificar temas de interés y preparar contenido útil.
+                </p>
+                <div className="bg-rose-950/30 border border-rose-500/30 p-4 rounded-xl text-xs text-rose-200 font-semibold">
+                  <strong>Precaución:</strong> Pertenecer a una comunidad NO significa haber autorizado cualquier campaña comercial por mensaje privado.
+                </div>
+              </div>
+
+              <div className="bg-[#16161a] border border-slate-800 rounded-[2.5rem] p-8 shadow-xl">
+                <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-1">Sección 35 · Difusión Unidireccional</span>
+                <h5 className="text-2xl font-black text-white mb-3">Canales</h5>
+                <p className="text-sm text-slate-300 mb-3">
+                  Permite compartir actualizaciones con seguidores (novedades, contenido educativo, consejos, invitaciones a actividades).
+                </p>
+                <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl text-xs text-slate-200">
+                  <strong>Diferencia con un chat:</strong> En el canal se comparten actualizaciones para seguidores; cuando alguien necesita atención personalizada, se le orienta al canal de contacto individual.
+                </div>
+              </div>
+
+              <div className="bg-[#16161a] border border-slate-800 rounded-[2.5rem] p-8 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-1">Sección 36 · Gestión de Requerimientos</span>
+                  <h5 className="text-2xl font-black text-white mb-2">Pedidos y Solicitudes</h5>
+                  <p className="text-xs text-slate-300 mb-3">
+                    <strong>Proceso en 7 pasos:</strong> 1) Cliente expresa interés → 2) Identificar necesidad → 3) Compartir info → 4) Confirmar solicitud → 5) Validar disponibilidad → 6) Informar siguiente paso → 7) Seguimiento. <em>Nunca inventar precios o disponibilidad.</em>
+                  </p>
+                </div>
+                <div className="prompt-box relative p-4">
+                  <${CopyButton} text=${guionPedido} />
+                  <p className="text-xs text-emerald-300 pr-20">“${guionPedido}”</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Bloque6EstrategiaMarketing = () => {
+      const msgCampana = "Hola, [nombre]. Nos autorizaste a enviarte información sobre soluciones para tu operación. Preparamos una guía breve con tres puntos para evaluar antes de elegir una unidad de reparto. ¿Te gustaría recibirla?";
+      const msgCampanaPaso2 = "Con gusto. Para enviarte información más útil, ¿tu operación es principalmente urbana o interprovincial?";
+
+      const seg1 = "Gracias por escribir. Cuéntame un poco más sobre lo que necesitas y te ayudo a identificar el siguiente paso";
+      const seg2 = "Según lo que me comentas, esta alternativa podría ser relevante. Te comparto la ficha para que revises sus características";
+      const seg3 = "Hola, [nombre]. Quería saber si pudiste revisar la información que solicitaste. Si tienes alguna duda, con gusto la revisamos";
+      const seg4 = "Gracias por avisarme. Lo registraré para no seguir enviándote información sobre esta opción";
+
+      return html`
+        <section id="estrategia" className="bg-[#0a0a0a] border-t-4 border-emerald-500 slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-emerald-400 uppercase tracking-[0.2em] mb-4">Bloque 6 · Secciones 37, 38, 39, 40 y 41</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Estrategia de Marketing por WhatsApp</h3>
+              <p className="text-2xl text-slate-400 max-w-5xl mx-auto">
+                Diseño de campañas, secuencia de seguimiento en 4 pasos, acuerdo de servicio entre Marketing y Ventas e indicadores del embudo.
+              </p>
+            </div>
+
+            <!-- Secciones 37 y 38 -->
+            <div className="grid lg:grid-cols-12 gap-8 mb-14">
+              <div className="lg:col-span-5 bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl">
+                <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-2">Sección 37 · Planificación Previa</span>
+                <h4 className="text-3xl font-black text-white mb-4">Una Campaña NO Empieza Enviando Mensajes</h4>
+                <p className="text-sm text-slate-300 mb-5">Antes de escribir, marketing debe definir estos 9 puntos:</p>
+                <div className="space-y-2.5 text-sm">
+                  ${[
+                    ["1. Objetivo", "¿Qué queremos lograr?"],
+                    ["2. Público", "¿A quién queremos ayudar?"],
+                    ["3. Necesidad", "¿Qué problema o pregunta tiene?"],
+                    ["4. Permiso", "¿La persona espera recibir este mensaje?"],
+                    ["5. Propuesta", "¿Qué información o alternativa será útil?"],
+                    ["6. Canal y formato", "¿Texto, imagen, video o llamada a conversación?"],
+                    ["7. Responsable", "¿Quién atenderá las respuestas?"],
+                    ["8. Acción esperada", "¿Qué queremos que haga la persona?"],
+                    ["9. Medición", "¿Cómo sabremos si funcionó?"]
+                  ].map(([k, v], i) => html`
+                    <div key=${i} className="bg-[#16161a] border border-slate-800 px-4 py-2.5 rounded-xl flex justify-between gap-2">
+                      <strong className="text-[#f59e0b]">${k}:</strong>
+                      <span className="text-slate-200 text-right">${v}</span>
+                    </div>
+                  `)}
+                </div>
+              </div>
+
+              <div className="lg:col-span-7 bg-slate-900 border-2 border-emerald-500/50 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-emerald-400 block mb-2">Sección 38 · Modelo Práctico de Campaña</span>
+                  <h4 className="text-3xl font-black text-white mb-4">Ejemplo: Soluciones para Reparto</h4>
+                  <div className="grid sm:grid-cols-2 gap-3 mb-5 text-xs sm:text-sm">
+                    <div className="bg-[#16161a] p-4 rounded-2xl border border-slate-800"><strong className="text-emerald-400 block">Objetivo:</strong> Generar conversaciones con empresas que evalúan alternativas de movilidad.</div>
+                    <div className="bg-[#16161a] p-4 rounded-2xl border border-slate-800"><strong className="text-[#00aeef] block">Público:</strong> Personas que consultaron previamente y aceptaron recibir información.</div>
+                    <div className="bg-[#16161a] p-4 rounded-2xl border border-slate-800"><strong className="text-[#f59e0b] block">Necesidad:</strong> Entender qué alternativa responde al tipo de operación.</div>
+                    <div className="bg-[#16161a] p-4 rounded-2xl border border-slate-800"><strong className="text-purple-400 block">Contenido:</strong> Imagen o video con 3 preguntas antes de elegir unidad.</div>
+                  </div>
+                  <div className="prompt-box relative mb-4 p-5">
+                    <${CopyButton} text=${msgCampana} />
+                    <span className="text-xs font-bold uppercase text-emerald-400 block mb-1">Mensaje Inicial (Acción esperada: que responda si desea la guía):</span>
+                    <p className="text-sm text-emerald-300 pr-24">“${msgCampana}”</p>
+                  </div>
+                  <div className="prompt-box relative mb-4 p-5">
+                    <${CopyButton} text=${msgCampanaPaso2} />
+                    <span className="text-xs font-bold uppercase text-[#00aeef] block mb-1">Siguiente Paso (Si responde afirmativamente):</span>
+                    <p className="text-sm text-sky-300 pr-24">“${msgCampanaPaso2}”</p>
+                  </div>
+                </div>
+                <div className="bg-[#16161a] border border-slate-800 p-4 rounded-2xl text-xs text-slate-300">
+                  <strong>5 Indicadores de la campaña:</strong> Mensajes entregados · Respuestas · Personas interesadas · Conversaciones calificadas · Reuniones coordinadas.
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 39: Secuencia de seguimiento -->
+            <div className="bg-[#16161a] border border-slate-700 rounded-[3rem] p-8 md:p-12 shadow-2xl mb-14">
+              <div className="text-center mb-8">
+                <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 39 · Continuidad Comercial</span>
+                <h4 className="text-3xl font-black text-white">Secuencia de Seguimiento en 4 Pasos</h4>
+              </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+                ${[
+                  { paso: "Paso 1. Primera respuesta", txt: seg1 },
+                  { paso: "Paso 2. Información útil", txt: seg2 },
+                  { paso: "Paso 3. Seguimiento", txt: seg3 },
+                  { paso: "Paso 4. Respetar la respuesta", txt: seg4 }
+                ].map((s, i) => html`
+                  <div key=${i} className="prompt-box relative p-5 flex flex-col justify-between">
+                    <${CopyButton} text=${s.txt} />
+                    <div>
+                      <span className="text-xs font-black uppercase text-[#f59e0b] block mb-2 pr-16">${s.paso}</span>
+                      <p className="text-xs text-emerald-300 leading-relaxed">“${s.txt}”</p>
+                    </div>
+                  </div>
+                `)}
+              </div>
+              <div className="bg-rose-950/30 border border-rose-500/40 p-4 rounded-2xl text-xs sm:text-sm text-rose-200 text-center font-semibold">
+                <strong>Lo que debe evitarse:</strong> Insistir sin contexto · Hacer seguimiento todos los días por costumbre · Presionar · Continuar enviando promociones tras solicitud de baja · Suponer que el silencio significa interés.
+              </div>
+            </div>
+
+            <!-- Secciones 40 y 41: Acuerdo Marketing-Ventas e Indicadores -->
+            <div className="grid lg:grid-cols-12 gap-8">
+              <div className="lg:col-span-6 bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl">
+                <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-2">Sección 40 · Acuerdo de Trabajo</span>
+                <h4 className="text-2xl md:text-3xl font-black text-white mb-6">Marketing ↔ Ventas: Circuito de Retorno</h4>
+                <div className="grid sm:grid-cols-2 gap-4 mb-5">
+                  <div className="bg-[#16161a] border border-slate-800 p-5 rounded-2xl">
+                    <span className="text-xs font-black uppercase text-[#00aeef] block mb-2">Marketing entrega a Ventas (7):</span>
+                    <ul className="text-xs text-slate-200 space-y-1.5 font-medium">
+                      <li>• Info clara de la campaña</li>
+                      <li>• Público al que se dirige</li>
+                      <li>• Mensaje o promesa utilizada</li>
+                      <li>• Producto/servicio promocionado</li>
+                      <li>• Preguntas que podrían llegar</li>
+                      <li>• Contenidos aprobados</li>
+                      <li>• Condiciones que deben explicarse</li>
+                    </ul>
+                  </div>
+                  <div className="bg-[#16161a] border border-slate-800 p-5 rounded-2xl">
+                    <span className="text-xs font-black uppercase text-[#25D366] block mb-2">Ventas devuelve a Marketing (6):</span>
+                    <ul className="text-xs text-slate-200 space-y-1.5 font-medium">
+                      <li>• Preguntas frecuentes</li>
+                      <li>• Motivos de interés</li>
+                      <li>• Objeciones reales</li>
+                      <li>• Problemas de calidad de contactos</li>
+                      <li>• Dudas sin respuesta en contenido actual</li>
+                      <li>• Resultados de las oportunidades</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="bg-[#16161a] border-l-4 border-[#00aeef] p-4 rounded-xl text-xs text-slate-300">
+                  <strong>Ejemplo:</strong> Marketing anuncia <em>“Conoce opciones para reparto urbano”</em>. Si la mayoría pregunta por <strong>costos de mantenimiento</strong>, esa info vuelve a marketing para crear una pieza que responda esa necesidad.
+                </div>
+              </div>
+
+              <div className="lg:col-span-6 bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-emerald-400 block mb-2">Sección 41 · Métricas de Gestión</span>
+                  <h4 className="text-2xl md:text-3xl font-black text-white mb-4">Indicadores para el Área de Marketing</h4>
+                  <div className="grid grid-cols-2 gap-3 mb-5 text-xs">
+                    <div className="bg-[#16161a] p-3.5 rounded-xl border border-slate-800"><strong className="text-[#00aeef] block">1. Entrada:</strong> Conversaciones recibidas, origen, campaña/contenido.</div>
+                    <div className="bg-[#16161a] p-3.5 rounded-xl border border-slate-800"><strong className="text-[#f59e0b] block">2. Atención:</strong> Atendidas, tiempo respuesta, sin responsable, FAQs.</div>
+                    <div className="bg-[#16161a] p-3.5 rounded-xl border border-slate-800"><strong className="text-[#25D366] block">3. Comerciales:</strong> Calificadas, citas, cotizaciones, ventas, motivos pérdida.</div>
+                    <div className="bg-[#16161a] p-3.5 rounded-xl border border-slate-800"><strong className="text-rose-400 block">4. Calidad:</strong> Respuestas, bajas, bloqueos, plantillas, comentarios.</div>
+                  </div>
+                  <div className="bg-emerald-950/30 border border-emerald-500/40 p-5 rounded-2xl">
+                    <span className="text-xs font-black uppercase text-emerald-400 block mb-2">Ejemplo Simple de Embudo:</span>
+                    <div className="grid grid-cols-4 gap-2 text-center mb-3">
+                      <div className="bg-slate-900 p-2.5 rounded-xl"><span className="text-xl font-black text-white block">100</span><span className="text-[11px] text-slate-400">Escriben</span></div>
+                      <div className="bg-slate-900 p-2.5 rounded-xl"><span className="text-xl font-black text-[#00aeef] block">80</span><span className="text-[11px] text-slate-400">Atendidas</span></div>
+                      <div className="bg-slate-900 p-2.5 rounded-xl"><span className="text-xl font-black text-[#f59e0b] block">40</span><span className="text-[11px] text-slate-400">Cumplen perfil</span></div>
+                      <div className="bg-slate-900 p-2.5 rounded-xl"><span className="text-xl font-black text-[#25D366] block">15</span><span className="text-[11px] text-slate-400">Reunión</span></div>
+                    </div>
+                    <p className="text-xs text-slate-200">
+                      <strong>4 preguntas clave:</strong> ¿Qué pasó con las 20 sin atención? ¿Por qué solo la mitad cumplía el perfil? ¿Qué campaña atrajo mejores oportunidades? ¿Qué mejorar?
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Bloque7ContenidoIAFlow = () => {
+      const promptImagen = "Crea una imagen publicitaria vertical para una empresa que orienta a negocios sobre vehículos para reparto urbano. Muestra un entorno de trabajo realista, con una persona revisando una unidad comercial en una zona de distribución limpia y ordenada. El estilo debe ser profesional, cercano y creíble. Deja un espacio visual limpio para añadir después un texto breve. No inventes logotipos, precios, promociones ni características técnicas. La imagen debe servir para acompañar una conversación de WhatsApp con una empresa interesada en mejorar su operación.";
+      const msgAcompImagen = "Hola, [nombre]. Como conversamos, te comparto una guía visual sobre puntos que conviene revisar antes de elegir una unidad para reparto. Si me cuentas cómo opera tu empresa, el equipo puede orientarte mejor";
+      const promptVideo = "Genera un video breve y realista para presentar una conversación sobre movilidad para negocios. Muestra a una persona responsable de una operación de reparto observando una unidad comercial en un entorno urbano, mientras un asesor le explica opciones de manera cercana. Mantén un estilo profesional y natural. No incluyas precios, promociones, logotipos inventados ni afirmaciones técnicas. El video debe transmitir orientación y confianza y servir como apoyo para una conversación en WhatsApp.";
+      const plantillaEjercicioIA = `Mi público es: __________.\nSu pregunta o necesidad es: __________.\nLa pieza que crearé será: imagen / video.\nLa información que debe contener es: __________.\nLo que no debe inventar es: __________.\nEl mensaje que acompañará la pieza será: __________.\nLa respuesta que espero obtener es: __________.`;
+
+      return html`
+        <section id="ia-flow" className="bg-[#111827] border-t-4 border-purple-500 slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-purple-400 uppercase tracking-[0.2em] mb-4">Bloque 7 · Secciones 42, 43, 44, 45, 46 y 47</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Imágenes y Videos con IA (Google Flow) para WhatsApp</h3>
+              <p className="text-2xl text-slate-300 max-w-5xl mx-auto">
+                “¿Qué necesita entender el cliente y qué quiero que haga después?” — Cómo crear piezas visuales con Google Flow para acompañar la conversación.
+              </p>
+            </div>
+
+            <!-- Secciones 42, 43 y 44 -->
+            <div className="grid lg:grid-cols-3 gap-8 mb-14">
+              <div className="bg-slate-900 border border-slate-700 rounded-[2.5rem] p-8 shadow-xl">
+                <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-2">Sección 42 · Propósito Funcional</span>
+                <h4 className="text-2xl font-black text-white mb-3">La Pregunta Antes de Generar Contenido</h4>
+                <p className="text-sm text-slate-300 mb-4">
+                  Antes de abrir una herramienta de IA: <strong>“¿Qué necesita entender el cliente y qué quiero que haga después?”</strong>
+                </p>
+                <ul className="text-xs text-slate-200 space-y-2 font-medium">
+                  <li>• Entender qué evaluar para una operación de reparto</li>
+                  <li>• Reconocer las características de una opción</li>
+                  <li>• Solicitar una guía sencilla</li>
+                  <li>• Recordar su cita programada</li>
+                  <li>• Mostrar cómo funciona un servicio</li>
+                </ul>
+              </div>
+
+              <div className="bg-slate-900 border border-purple-500/50 rounded-[2.5rem] p-8 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-purple-400 block mb-2">Sección 43 · Herramienta de Creación IA</span>
+                  <h4 className="text-2xl font-black text-white mb-3">¿Qué es Google Flow?</h4>
+                  <p className="text-sm text-slate-300 mb-4">
+                    Herramienta de creación con IA para trabajar imágenes y videos mediante instrucciones y recursos de referencia:
+                  </p>
+                  <ul className="text-xs text-slate-200 space-y-1.5 mb-4 font-medium">
+                    <li>• Crear una imagen conceptual o editar una imagen</li>
+                    <li>• Generar un video breve</li>
+                    <li>• Animar o utilizar imágenes como referencia</li>
+                    <li>• Explorar diferentes propuestas visuales</li>
+                  </ul>
+                </div>
+                <div className="flex flex-wrap gap-3 text-xs font-black">
+                  <a href="https://support.google.com/flow/answer/16729550?hl=en-MP" target="_blank" rel="noreferrer" className="text-purple-400 hover:underline flex items-center gap-1">Crear imágenes en Flow <${ArrowUpRight} className="w-3.5 h-3.5"/></a>
+                  <a href="https://support.google.com/flow/answer/16353334?hl=en-0" target="_blank" rel="noreferrer" className="text-[#00aeef] hover:underline flex items-center gap-1">Crear videos en Flow <${ArrowUpRight} className="w-3.5 h-3.5"/></a>
+                </div>
+              </div>
+
+              <div className="bg-slate-900 border border-slate-700 rounded-[2.5rem] p-8 shadow-xl">
+                <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 44 · Estructura en 7 Bloques</span>
+                <h4 className="text-2xl font-black text-white mb-3">Fórmula para Crear una Pieza Útil</h4>
+                <div className="bg-[#16161a] border border-purple-500/40 p-3.5 rounded-xl text-xs font-black text-purple-300 mb-4 text-center">
+                  Objetivo + Público + Producto/Servicio + Contexto + Estilo + Formato + Revisión
+                </div>
+                <ul className="text-xs text-slate-200 space-y-1.5">
+                  <li><strong>Objetivo:</strong> Generar interés en una guía.</li>
+                  <li><strong>Público:</strong> Responsables de pequeñas operaciones de reparto.</li>
+                  <li><strong>Tema:</strong> Cómo evaluar una unidad de trabajo.</li>
+                  <li><strong>Contexto:</strong> Operación urbana.</li>
+                  <li><strong>Estilo / Formato:</strong> Profesional y cercano · Imagen vertical.</li>
+                  <li><strong>Revisión:</strong> Verificar cero características inventadas.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Secciones 45 y 46: Prompts de Imagen y Video -->
+            <div className="grid lg:grid-cols-2 gap-8 mb-14">
+              <div className="bg-[#16161a] border-2 border-[#00aeef] rounded-[3rem] p-8 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 45 · Demostración de Imagen IA</span>
+                  <h4 className="text-2xl md:text-3xl font-black text-white mb-4">Prompt de Imagen de Ejemplo</h4>
+                  <div className="prompt-box relative mb-5">
+                    <${CopyButton} text=${promptImagen} />
+                    <span className="text-xs uppercase font-bold text-slate-400 block mb-2">Prompt para Google Flow (Imagen):</span>
+                    <p className="text-sm text-sky-300 pr-24 leading-relaxed">${promptImagen}</p>
+                  </div>
+                  <div className="prompt-box relative mb-4 p-4">
+                    <${CopyButton} text=${msgAcompImagen} />
+                    <span className="text-xs uppercase font-bold text-[#25D366] block mb-1">La imagen no se envía sola — Mensaje de acompañamiento:</span>
+                    <p className="text-xs text-emerald-300 pr-20">“${msgAcompImagen}”</p>
+                  </div>
+                </div>
+                <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-xs text-slate-300 font-bold">
+                  Acción esperada: Que el cliente explique cómo opera su empresa y su necesidad.
+                </div>
+              </div>
+
+              <div className="bg-[#16161a] border-2 border-purple-500 rounded-[3rem] p-8 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-purple-400 block mb-2">Sección 46 · Demostración de Video IA</span>
+                  <h4 className="text-2xl md:text-3xl font-black text-white mb-4">Prompt de Video de Ejemplo</h4>
+                  <div className="prompt-box relative mb-5">
+                    <${CopyButton} text=${promptVideo} />
+                    <span className="text-xs uppercase font-bold text-slate-400 block mb-2">Prompt para Google Flow (Video):</span>
+                    <p className="text-sm text-purple-300 pr-24 leading-relaxed">${promptVideo}</p>
+                  </div>
+                  <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                    <span className="text-xs font-black uppercase text-[#f59e0b] block mb-2">Checklist de 6 puntos antes de enviarlo:</span>
+                    <div className="grid sm:grid-cols-2 gap-1.5 text-xs text-slate-200 font-medium">
+                      <span>1. ¿Se parece al producto real?</span>
+                      <span>2. ¿Agregó elementos inexistentes?</span>
+                      <span>3. ¿Se ven logotipos incorrectos?</span>
+                      <span>4. ¿Puede inducir a error?</span>
+                      <span>5. ¿Hay afirmaciones no verificadas?</span>
+                      <span>6. ¿La imagen cuenta con autorización?</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 47: Ejercicio práctico de IA -->
+            <div className="bg-gradient-to-br from-[#1e3a8a] to-slate-900 border-2 border-purple-400 rounded-[3rem] p-8 md:p-10 shadow-2xl">
+              <div className="grid lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-5">
+                  <span className="bg-purple-500 text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full inline-block mb-3">Sección 47 · Ejercicio Práctico de IA</span>
+                  <h4 className="text-3xl font-black text-white mb-3">Diseña tu Pieza + Mensaje de Conversación</h4>
+                  <p className="text-sm text-slate-200">
+                    Si algún participante no puede generar contenido durante la sesión por acceso, créditos o dispositivo, deja preparado el prompt y el mensaje con esta plantilla copiable:
+                  </p>
+                </div>
+                <div className="lg:col-span-7 prompt-box relative">
+                  <${CopyButton} text=${plantillaEjercicioIA} />
+                  <p className="text-sm text-emerald-300 whitespace-pre-line pr-24">${plantillaEjercicioIA}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Bloque8CasosPorCargo = () => {
+      const respCommunity = "¡Hola! Con gusto te orientamos. Puedes escribirnos por WhatsApp y contarnos qué tipo de información necesitas";
+      const respGerenciaCorp = "Gracias por la información. Con estos datos podemos coordinar una conversación con el equipo corporativo para revisar alternativas";
+
+      return html`
+        <section id="casos-cargo" className="bg-[#0a0a0a] border-t-4 border-[#00aeef] slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-[#00aeef] uppercase tracking-[0.2em] mb-4">Bloque 8 · Secciones 48, 49, 50, 51, 52, 53 y 54</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">7 Casos Adaptados a los Cargos del Grupo</h3>
+              <p className="text-2xl text-slate-400 max-w-5xl mx-auto">
+                Aplicación específica para Asesor Comercial, Gerente de Marketing, Brand Content, Community Manager, Gerencia Corporativa, Gestión Humana y Sistemas / SAP.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7 mb-7">
+              <!-- 48: Asesor comercial -->
+              <div className="bg-slate-900 border border-[#25D366]/50 rounded-[2.5rem] p-7 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-1">Sección 48 · Ventas Directas</span>
+                  <h4 className="text-2xl font-black text-white mb-2">1. Asesor Comercial</h4>
+                  <p className="text-xs text-slate-300 mb-3"><strong>Situación:</strong> Persona escribe tras ver contenido sobre movilidad para negocio. <strong>Objetivo:</strong> Entender necesidad y proponer siguiente paso.</p>
+                  <div className="bg-[#16161a] border border-slate-800 p-3.5 rounded-xl text-xs text-slate-200 space-y-1 mb-3">
+                    <p><strong>Cliente:</strong> “Hola, quisiera información”.</p>
+                    <p className="text-emerald-300"><strong>Asesor:</strong> “¡Hola! Con gusto te ayudo. ¿Estás buscando una solución para uso personal o para una empresa?”</p>
+                    <p><strong>Cliente:</strong> “Para mi empresa”.</p>
+                    <p className="text-emerald-300"><strong>Asesor:</strong> “Perfecto. ¿Qué tipo de operación realizan y en qué ciudad necesitan utilizar la unidad?”</p>
+                  </div>
+                  <p className="text-xs text-slate-300 mb-2"><strong>Herramientas:</strong> Bienvenida, Respuesta rápida, Etiqueta nuevo contacto, Catálogo/ficha y Recordatorio.</p>
+                </div>
+                <div className="bg-[#16161a] p-3 rounded-xl text-xs text-slate-400">
+                  <strong>Devuelve a Marketing:</strong> Preguntas del cliente, qué info faltaba, qué contenido ayudó y qué objeción apareció.
+                </div>
+              </div>
+
+              <!-- 49: Gerente de marketing -->
+              <div className="bg-slate-900 border border-[#00aeef]/50 rounded-[2.5rem] p-7 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-1">Sección 49 · Dirección de Marketing</span>
+                  <h4 className="text-2xl font-black text-white mb-2">2. Gerente de Marketing</h4>
+                  <p className="text-xs text-slate-300 mb-3"><strong>Situación:</strong> Campaña genera muchas conversaciones, pero no se sabe cuántas son oportunidades. <strong>Objetivo:</strong> Conectar marketing con el proceso comercial.</p>
+                  <ul className="text-xs text-slate-200 space-y-1 mb-3 font-medium">
+                    <li>• Definir qué es una oportunidad e identificar campaña/origen</li>
+                    <li>• Acordar etiquetas con ventas y quién recibe cada consulta</li>
+                    <li>• Revisar cuántas avanzan, recoger FAQs y ajustar anuncios</li>
+                  </ul>
+                </div>
+                <div className="bg-[#16161a] p-3.5 rounded-xl text-xs text-sky-200">
+                  <strong>5 preguntas a revisar:</strong> ¿Público adecuado? ¿Promesa clara? ¿Respuesta a tiempo? ¿Asesor con contexto? ¿Qué tema necesita nueva pieza?
+                </div>
+              </div>
+
+              <!-- 50: Brand content y dirección creativa -->
+              <div className="bg-slate-900 border border-purple-500/50 rounded-[2.5rem] p-7 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-purple-400 block mb-1">Sección 50 · Contenido y Marca</span>
+                  <h4 className="text-2xl font-black text-white mb-2">3. Brand Content y Creatividad</h4>
+                  <p className="text-xs text-slate-300 mb-3"><strong>Situación:</strong> Asesores envían imágenes distintas que no explican bien la propuesta. <strong>Objetivo:</strong> Crear piezas consistentes y útiles para conversar.</p>
+                  <p className="text-xs text-slate-200 mb-3"><strong>Acciones:</strong> Identificar FAQs, diseñar pieza por necesidad, crear mensaje acompañante, confirmar exactitud, entregar a ventas y medir cuáles generan mejores conversaciones.</p>
+                </div>
+                <div className="bg-[#16161a] p-3.5 rounded-xl text-xs text-purple-200">
+                  <strong>Biblioteca de 5 piezas:</strong> 1) Imagen explicativa, 2) Video primera consulta, 3) Pieza educativa para estados, 4) Ficha para reunión, 5) Contenido postventa.
+                </div>
+              </div>
+
+              <!-- 51: Community manager -->
+              <div className="bg-slate-900 border border-[#f59e0b]/50 rounded-[2.5rem] p-7 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-1">Sección 51 · Redes Sociales</span>
+                  <h4 className="text-2xl font-black text-white mb-2">4. Community Manager</h4>
+                  <p className="text-xs text-slate-300 mb-3"><strong>Situación:</strong> Persona comenta en redes <em>“¿Dónde puedo recibir información?”</em>. <strong>Objetivo:</strong> Llevarla a WhatsApp sin perder contexto.</p>
+                  <div className="prompt-box relative p-3.5 mb-3">
+                    <${CopyButton} text=${respCommunity} />
+                    <p className="text-xs text-amber-300 pr-16">“${respCommunity}”</p>
+                  </div>
+                  <p className="text-xs text-slate-300"><strong>Al llegar a WhatsApp:</strong> Identificar de qué contenido viene, qué producto interesó, qué necesita y a qué responsable derivar.</p>
+                </div>
+              </div>
+
+              <!-- 52: Gerencia comercial corporativa -->
+              <div className="bg-slate-900 border border-emerald-500/50 rounded-[2.5rem] p-7 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-emerald-400 block mb-1">Sección 52 · Ventas B2B / Flotas</span>
+                  <h4 className="text-2xl font-black text-white mb-2">5. Gerencia Comercial Corporativa</h4>
+                  <p className="text-xs text-slate-300 mb-2"><strong>Situación:</strong> Empresa solicita renovar unidades. <strong>5 Preguntas progresivas:</strong> Actividad, ciudad, necesidad, cuántas unidades evalúa y plazo de decisión.</p>
+                  <div className="prompt-box relative p-3.5 mb-3">
+                    <${CopyButton} text=${respGerenciaCorp} />
+                    <p className="text-xs text-emerald-300 pr-16">“${respGerenciaCorp}”</p>
+                  </div>
+                </div>
+                <div className="bg-[#16161a] p-3 rounded-xl text-xs text-slate-300">
+                  <strong>Rol Marketing:</strong> Contenido para empresas, propuesta clara, FAQs y asegurar que la consulta llegue con contexto.
+                </div>
+              </div>
+
+              <!-- 53: Gestión y desarrollo humano -->
+              <div className="bg-slate-900 border border-rose-500/50 rounded-[2.5rem] p-7 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-rose-400 block mb-1">Sección 53 · Talento y Estándares</span>
+                  <h4 className="text-2xl font-black text-white mb-2">6. Gestión y Desarrollo Humano</h4>
+                  <p className="text-xs text-slate-300 mb-3"><strong>Situación:</strong> Cada integrante responde distinto sin guía común. <strong>Objetivo:</strong> Experiencia consistente sin eliminar la personalidad del asesor.</p>
+                  <p className="text-xs text-slate-200 mb-3"><strong>Acciones:</strong> Recoger FAQs, preparar respuestas base, definir qué verificar, explicar cuándo derivar, capacitar y revisar casos.</p>
+                </div>
+                <div className="bg-[#16161a] p-3.5 rounded-xl text-xs text-rose-200">
+                  <strong>Ejercicio (5 situaciones):</strong> 1) Pide info general, 2) Pide hablar con persona, 3) Cliente molesto, 4) Pide precio no confirmado, 5) Solicita baja.
+                </div>
+              </div>
+            </div>
+
+            <!-- 54: Análisis de sistemas o SAP -->
+            <div className="bg-[#16161a] border-2 border-slate-700 rounded-[2.5rem] p-8 shadow-xl">
+              <div className="grid lg:grid-cols-12 gap-6 items-center">
+                <div className="lg:col-span-5">
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-1">Sección 54 · Tecnología, Procesos y Datos</span>
+                  <h4 className="text-2xl md:text-3xl font-black text-white mb-2">7. Caso para Análisis de Sistemas o SAP</h4>
+                  <p className="text-sm text-slate-300">
+                    <strong>Situación:</strong> El equipo comercial necesita registrar información para que otras áreas den continuidad. <strong>Objetivo:</strong> Identificar qué información es necesaria y dónde debe mantenerse.
+                  </p>
+                </div>
+                <div className="lg:col-span-4 bg-slate-900 border border-slate-800 p-5 rounded-2xl text-xs text-slate-200 space-y-1">
+                  <strong className="text-[#f59e0b] block uppercase mb-1">6 Preguntas de Arquitectura:</strong>
+                  <p>• ¿Qué datos necesita realmente el proceso y quién los registra?</p>
+                  <p>• ¿Qué área los consulta y cómo se corrige un dato equivocado?</p>
+                  <p>• ¿Qué información NO debería solicitarse por WhatsApp?</p>
+                  <p>• ¿Se necesita integración o primero hay que ordenar el proceso?</p>
+                </div>
+                <div className="lg:col-span-3 bg-slate-900 border border-slate-800 p-5 rounded-2xl text-xs text-emerald-300">
+                  <strong className="text-[#25D366] block uppercase mb-1">Información Mínima (6 campos):</strong>
+                  <p>1. Nombre de contacto · 2. Empresa · 3. Motivo de consulta · 4. Responsable asignado · 5. Próximo paso · 6. Fecha de seguimiento.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const BloqueCierreYActividad = () => {
+      const pasosIntegrados = [
+        { p: "Paso 1. Marketing identifica necesidad", d: "Varias empresas preguntan qué considerar al evaluar una solución para reparto." },
+        { p: "Paso 2. Contenido prepara una pieza", d: "Imagen o video breve que explica 3 preguntas útiles." },
+        { p: "Paso 3. Se invita a conversar", d: "“Si estás evaluando opciones para tu operación, escríbenos y cuéntanos qué necesitas”." },
+        { p: "Paso 4. El cliente escribe", d: "“Hola, quiero información para mi empresa”." },
+        { p: "Paso 5. El equipo responde", d: "“Con gusto. ¿En qué ciudad opera tu empresa y qué tipo de actividad realiza?”" },
+        { p: "Paso 6. Se identifica el interés", d: "Se registra la información necesaria y se asigna al responsable." },
+        { p: "Paso 7. El equipo comercial continúa", d: "Se coordina una reunión o se comparte información adecuada." },
+        { p: "Paso 8. Marketing aprende", d: "Revisa qué preguntas se repitieron, qué contenido generó consultas, cuántas llegaron a responsable y cuántas avanzaron." },
+        { p: "Paso 9. El equipo mejora", d: "Se ajustan la pieza, el mensaje y el proceso de atención." }
+      ];
+
+      const plantillaMiniEstrategia = `MI MINI ESTRATEGIA DE WHATSAPP — SESIÓN 1\n1. Mi público o área: \n2. Necesidad que quiero atender: \n3. Objetivo de la conversación: \n4. Herramienta de WhatsApp que usaré: \n5. Contenido que necesito preparar: \n6. Mensaje inicial: \n7. Siguiente paso esperado: \n8. Responsable de responder: \n9. Indicador que revisaré: \n10. Cómo cuidaré el consentimiento y la relevancia: `;
+
+      const cronograma = [
+        { t: "10 min", act: "Apertura, diagnóstico y recorrido de la clase" },
+        { t: "20 min", act: "WhatsApp Messenger, Business y Platform/API" },
+        { t: "25 min", act: "Vinculación con Meta, coexistencia, proveedores y Cloud API" },
+        { t: "25 min", act: "Tipos de mensajes, ventanas, límites y costos" },
+        { t: "15 min", act: "Calidad del número y comunicación responsable" },
+        { t: "10 min", act: "Pausa" },
+        { t: "35 min", act: "Herramientas de WhatsApp Business para marketing y ventas" },
+        { t: "20 min", act: "Estrategia de marketing y coordinación comercial" },
+        { t: "15 min", act: "Demostración de imágenes o video con IA" },
+        { t: "5 min", act: "Cierre y preparación para la sesión 2" }
+      ];
+
+      const fuentes = [
+        { label: "WhatsApp Business Platform: precios y categorías", url: "https://whatsappbusiness.com/products/platform-pricing/" },
+        { label: "Meta: WhatsApp Business App y Platform en simultáneo", url: "https://about.fb.com/news/2025/09/bringing-new-tools-to-help-businesses-boost-engagement-customer-support-and-discoverability/" },
+        { label: "Meta: calidad, plantillas y gestión de mensajes comerciales", url: "https://about.fb.com/news/2025/04/ways-to-manage-your-businesses-chats-on-whatsapp/" },
+        { label: "WhatsApp: listas de difusión en la aplicación", url: "https://faq.whatsapp.com/653415899610349/" },
+        { label: "YCloud: planes y condiciones", url: "https://www.ycloud.com/pricing?showCompare=true" },
+        { label: "Manychat: límites de mensajería", url: "https://help.manychat.com/en/articles/17742177-whatsapp-messaging-limits-how-they-work-and-how-to-scale-effectively" },
+        { label: "Respond.io: condiciones de precios y mensajes de servicio", url: "https://respond.io/help/whatsapp/whatsapp-pricing" },
+        { label: "Google: creación de imágenes en Flow", url: "https://support.google.com/flow/answer/16729550?hl=en-MP" },
+        { label: "Google: créditos y costos de generación en Flow", url: "https://support.google.com/flow/answer/16526234?hl=es-419" }
+      ];
+
+      return html`
+        <section id="cierre" className="bg-[#111827] border-t-4 border-[#f59e0b] slide-container">
+          <div className="container mx-auto px-6 max-w-[1600px]">
+            <div className="text-center mb-16">
+              <h2 className="text-2xl font-black text-[#f59e0b] uppercase tracking-[0.2em] mb-4">Secciones 55, 56, 57, 58, 59 y 60 · Integración y Cierre</h2>
+              <h3 className="text-4xl md:text-6xl font-black text-white mb-6">Caso Integrado, Actividad Final y Puente a la Sesión 2</h3>
+            </div>
+
+            <!-- Sección 55: Caso integrado en 9 pasos -->
+            <div className="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-12 shadow-2xl mb-14">
+              <div className="text-center mb-8">
+                <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 55 · Visión Completa</span>
+                <h4 className="text-3xl font-black text-white">Caso Integrado: Una Campaña de Principio a Fin (9 Pasos)</h4>
+              </div>
+              <div className="grid md:grid-cols-3 gap-4">
+                ${pasosIntegrados.map((item, i) => html`
+                  <div key=${i} className="bg-[#16161a] border border-slate-800 p-5 rounded-2xl">
+                    <span className="text-xs font-black uppercase text-[#25D366] block mb-1">${item.p}</span>
+                    <p className="text-sm text-slate-200 leading-relaxed">${item.d}</p>
+                  </div>
+                `)}
+              </div>
+            </div>
+
+            <!-- Sección 56: Actividad final y Sección 57: Distribución de las 3 horas -->
+            <div className="grid lg:grid-cols-12 gap-8 mb-14 items-stretch">
+              <div className="lg:col-span-6 bg-gradient-to-br from-[#f59e0b] to-[#d97706] rounded-[3rem] p-8 md:p-10 border-4 border-yellow-300 shadow-2xl text-slate-950 flex flex-col justify-between">
+                <div>
+                  <span className="bg-slate-950 text-[#f59e0b] text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full inline-block mb-3">Sección 56 · Actividad Final de la Sesión</span>
+                  <h4 className="text-3xl font-black mb-3">Plantilla: Mi Mini Estrategia de WhatsApp</h4>
+                  <p className="text-sm font-semibold mb-4">Cada participante construye su propuesta completando estos 10 puntos:</p>
+                  <div className="prompt-box relative text-left">
+                    <${CopyButton} text=${plantillaMiniEstrategia} />
+                    <p className="text-xs sm:text-sm text-emerald-300 whitespace-pre-line pr-24">${plantillaMiniEstrategia}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-6 bg-slate-900 border border-slate-700 rounded-[3rem] p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block">Sección 57 · Cronograma</span>
+                      <h4 className="text-2xl md:text-3xl font-black text-white">Distribución Sugerida (180 min)</h4>
+                    </div>
+                    <span className="bg-[#00aeef]/20 text-[#00aeef] px-4 py-1.5 rounded-full text-xs font-black">3 Horas</span>
+                  </div>
+                  <div className="space-y-2 mb-4">
+                    ${cronograma.map((c, i) => html`
+                      <div key=${i} className=${`px-4 py-2.5 rounded-xl flex justify-between items-center text-xs sm:text-sm ${c.act === 'Pausa' ? 'bg-amber-950/40 border border-amber-500/40 text-amber-300 font-black' : 'bg-[#16161a] border border-slate-800 text-slate-200'}`}>
+                        <span className="font-semibold">${c.act}</span>
+                        <span className="font-mono font-black text-[#00aeef] ml-4 shrink-0">${c.t}</span>
+                      </div>
+                    `)}
+                  </div>
+                </div>
+                <div className="bg-[#16161a] border-l-4 border-[#f59e0b] p-3.5 rounded-xl text-xs text-slate-300">
+                  <strong>Nota para el facilitador:</strong> En vivo, prioriza las comparaciones, una demostración de conexión o revisión de cuenta, un ejercicio de costos y un caso integrado.
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 58 y Sección 59 -->
+            <div className="grid lg:grid-cols-2 gap-8 mb-14">
+              <div className="bg-[#16161a] border-2 border-[#25D366] rounded-[3rem] p-8 md:p-10 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#25D366] block mb-2">Sección 58 · Cierre de la Primera Sesión</span>
+                  <h4 className="text-3xl font-black text-white mb-5">Las Cinco Ideas que Deben Recordar</h4>
+                  <ul className="space-y-3 text-sm sm:text-base text-slate-200 font-semibold mb-6">
+                    <li className="flex items-start gap-3"><${CheckCircle} className="w-5 h-5 text-[#25D366] shrink-0 mt-0.5"/> 1. Cada opción de WhatsApp cumple una función diferente.</li>
+                    <li className="flex items-start gap-3"><${CheckCircle} className="w-5 h-5 text-[#25D366] shrink-0 mt-0.5"/> 2. Una conexión oficial no reemplaza el consentimiento ni garantiza inmunidad frente a restricciones.</li>
+                    <li className="flex items-start gap-3"><${CheckCircle} className="w-5 h-5 text-[#25D366] shrink-0 mt-0.5"/> 3. Los mensajes, las conversaciones, las ventanas y los límites son conceptos diferentes.</li>
+                    <li className="flex items-start gap-3"><${CheckCircle} className="w-5 h-5 text-[#25D366] shrink-0 mt-0.5"/> 4. Marketing y ventas deben compartir información y responsabilidades.</li>
+                    <li className="flex items-start gap-3"><${CheckCircle} className="w-5 h-5 text-[#25D366] shrink-0 mt-0.5"/> 5. El contenido debe ayudar al cliente a avanzar en una conversación, no solo verse bien.</li>
+                  </ul>
+                </div>
+                <div className="bg-slate-900 border-l-4 border-[#f59e0b] p-5 rounded-2xl">
+                  <span className="text-xs font-black uppercase text-[#f59e0b] block mb-1">Frase de Cierre</span>
+                  <p className="text-base text-white font-bold">
+                    “La empresa que mejor aprovecha WhatsApp no es la que más mensajes envía. Es la que entiende a quién le escribe, por qué le escribe y qué hará cuando esa persona responda”.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-[#16161a] border-2 border-[#00aeef] rounded-[3rem] p-8 md:p-10 shadow-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00aeef] block mb-2">Sección 59 · Próximo Encuentro</span>
+                  <h4 className="text-3xl font-black text-white mb-5">Puente Hacia la Sesión 2 (Meta Business Agent)</h4>
+                  <div className="grid sm:grid-cols-2 gap-4 mb-6">
+                    <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                      <span className="text-xs font-black uppercase text-[#25D366] block mb-2">En la Sesión 1 organizamos:</span>
+                      <ul className="text-xs sm:text-sm text-slate-200 space-y-1 font-medium">
+                        <li>• El canal</li>
+                        <li>• Las herramientas</li>
+                        <li>• La comunicación</li>
+                        <li>• Los mensajes</li>
+                        <li>• La estrategia</li>
+                        <li>• Los casos de uso</li>
+                      </ul>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                      <span className="text-xs font-black uppercase text-[#00aeef] block mb-2">En la Sesión 2 profundizaremos en:</span>
+                      <ul className="text-xs sm:text-sm text-slate-200 space-y-1 font-medium">
+                        <li>• Meta Business Agent</li>
+                        <li>• Información que debe conocer</li>
+                        <li>• Instrucciones y tono</li>
+                        <li>• Preguntas frecuentes y límites</li>
+                        <li>• Derivación a una persona</li>
+                        <li>• Pruebas reales y mejora continua</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-slate-900 border-l-4 border-[#00aeef] p-5 rounded-2xl">
+                  <span className="text-xs font-black uppercase text-[#00aeef] block mb-1">Principio para la siguiente sesión</span>
+                  <p className="text-base text-white font-bold">
+                    “Antes de automatizar, debemos tener claro qué quiere resolver el cliente y cómo debe responder el negocio”.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección 60: Fuentes de consulta -->
+            <div className="bg-slate-900 border border-slate-700 rounded-[2.5rem] p-8 mb-16">
+              <span className="text-xs font-black uppercase tracking-widest text-[#f59e0b] block mb-2">Sección 60 · Referencias Oficiales</span>
+              <h4 className="text-2xl font-black text-white mb-4">Fuentes de Consulta para el Facilitador</h4>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                ${fuentes.map((f, i) => html`
+                  <a key=${i} href=${f.url} target="_blank" rel="noreferrer" className="bg-[#16161a] hover:bg-slate-800 border border-slate-800 hover:border-[#00aeef] p-4 rounded-xl text-xs font-bold text-slate-200 flex items-center justify-between gap-2 transition-colors">
+                    <span>${f.label}</span>
+                    <${ArrowUpRight} className="w-4 h-4 text-[#00aeef] shrink-0"/>
+                  </a>
+                `)}
+              </div>
+            </div>
+
+            <!-- Bloque de Cierre del Facilitador Hugo López -->
+            <div className="bg-gradient-to-r from-[#1e3a8a] via-[#0f172a] to-[#1e3a8a] p-10 md:p-16 rounded-[4rem] border-2 border-[#00aeef]/50 shadow-[0_0_80px_rgba(0,174,239,0.25)]">
+              <div className="grid lg:grid-cols-12 gap-12 items-center">
+                <div className="lg:col-span-4 flex flex-col items-center text-center">
+                  <div className="w-44 h-44 sm:w-48 sm:h-48 rounded-full border-[5px] border-[#00aeef] overflow-hidden shadow-[0_0_40px_rgba(0,174,239,0.5)] mb-6">
+                    <img src=${HUGO_PHOTO} alt="Hugo López" className="w-full h-full object-cover object-top" />
+                  </div>
+                  <span className="text-sm font-black uppercase tracking-widest text-[#f59e0b]">Cierre del Facilitador</span>
+                  <h4 className="text-3xl font-black text-white mt-1">Hugo López</h4>
+                  <p className="text-base text-blue-200 mt-1">Asociación Automotriz del Perú — CECAAP</p>
+                </div>
+                <div className="lg:col-span-8 text-center lg:text-left space-y-6">
+                  <p className="text-2xl md:text-4xl text-white font-medium leading-relaxed">
+                    “La empresa que mejor aprovecha WhatsApp no es la que más mensajes envía. Es la que entiende a quién le escribe, por qué le escribe y qué hará cuando esa persona responda.”
+                  </p>
+                  <p className="text-xl md:text-2xl text-[#00aeef] font-black leading-relaxed">
+                    “Antes de automatizar en la Sesión 2, dejemos claro qué quiere resolver nuestro cliente y cómo trabajan juntos marketing, atención y ventas.”
+                  </p>
+                  <div className="pt-4">
+                    <a href="https://aap.org.pe/cecaap" target="_blank" rel="noreferrer" className="inline-flex items-center gap-4 bg-white text-[#1e3a8a] px-8 sm:px-10 py-5 rounded-full text-xl sm:text-2xl font-black hover:bg-[#f59e0b] hover:text-white transition-all shadow-2xl">
+                      CENTRO DE CAPACITACIÓN CECAAP — AAP <${ArrowUpRight} className="w-7 h-7"/>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    };
+
+    const Footer = () => html`
+      <footer className="bg-[#0f172a] text-slate-400 pt-20 pb-12 border-t-[8px] border-[#f59e0b]">
+        <div className="container mx-auto px-6 text-center max-w-[1400px]">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-12 mb-16">
+            <div className="bg-white p-6 rounded-3xl shadow-lg inline-block">
+              <img src=${AAP_LOGO} alt="Logo Asociación Automotriz del Perú" className="h-20 w-auto object-contain" />
+            </div>
+            <div className="w-px h-28 bg-slate-700 hidden md:block"></div>
+            <div className="text-center md:text-left max-w-xl text-xl leading-relaxed">
+              <strong className="text-white block mb-2 text-2xl">WhatsApp Business para Marketing, Comunicación y Gestión Comercial</strong>
+              Sesión 1: Herramientas, API, calidad del número y estrategias para convertir conversaciones en oportunidades · Duración: 3 horas · Referencia: 2 de noviembre de 2026 · CECAAP — Asociación Automotriz del Perú.
+            </div>
+            <div className="w-px h-28 bg-slate-700 hidden md:block"></div>
+            <div className="flex items-center gap-4 bg-slate-900/90 border border-slate-700 p-4 rounded-3xl">
+              <img src=${HUGO_PHOTO} alt="Hugo López" className="w-16 h-16 rounded-full object-cover object-top border-2 border-[#00aeef]" />
+              <div className="text-left pr-2">
+                <span className="text-xs font-black uppercase text-[#00aeef] block">Facilitador</span>
+                <span className="text-lg font-black text-white">Hugo López</span>
+              </div>
+            </div>
+          </div>
+          <p className="text-lg text-slate-500 border-t border-slate-800 pt-8">
+            © 2026 Asociación Automotriz del Perú (CECAAP) × Hugo López · Base de Conocimientos Oficial — Sesión 1.<br/>
+            Prohibida la reproducción total o parcial sin autorización.
+          </p>
+        </div>
+      </footer>
+    `;
+
+    const App = () => html`
+      <div className="font-sans text-slate-100 bg-[#0a0a0a] scroll-smooth selection:bg-[#00aeef] selection:text-white">
+        <${Header} />
+        <${Hero} />
+        <${PropositoYResultado} />
+        <${IdeaCentralYFlujo} />
+        <${DiagnosticoInicial} />
+        <${Bloque1TresOpciones} />
+        <${Bloque2MetaYConexion} />
+        <${Bloque3MensajesYVentanas} />
+        <${Bloque3LimitesYCostos} />
+        <${Bloque4CalidadYConfianza} />
+        <${Bloque5HerramientasAppParte1} />
+        <${Bloque5HerramientasAppParte2} />
+        <${Bloque6EstrategiaMarketing} />
+        <${Bloque7ContenidoIAFlow} />
+        <${Bloque8CasosPorCargo} />
+        <${BloqueCierreYActividad} />
+        <${Footer} />
+      </div>
+    `;
+
+    createRoot(document.getElementById('root')).render(html`<${App} />`);
+  </script>
+</body>
+</html>
